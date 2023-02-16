@@ -1,0 +1,46 @@
+﻿@page
+@model Durak.Pages.PlayModel
+@{
+
+}
+<div class="container">
+    <div class="row p-1">
+        <div class="col-2">GameID</div>
+        <div class="col-4"><input type="text" id="groupName" /></div>
+    </div>
+    <!--Game type and deck size to change to switches.-->
+    <div class="row p-1">
+        <div class="col-2">Traditional Game</div>
+        <div class="col-4"><input type="checkbox" id="taditional" /></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-2">Small Deck</div>
+        <div class="col-4"><input type="checkbox" id="smallDeck" /></div>
+    </div>
+    <div class="col-6">
+        <hr />
+    </div>
+    <div class="col-6 text-end">
+        <input type="button" id="joinButton" value="Join / Create" />
+    </div>
+</div>
+<br />
+
+<!-- I'm just using hardcoded rows for now to visualize-->
+<div class="container">
+    <input type="button" value="Refresh" class="btn btn-primary" onclick="RefreshLobbies()" />
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Lobby ID</th>
+                <th>Lobby Type</th>
+                <th>Deck Size</th>
+                <th>Players</th>
+                <th>Join</th>
+            </tr>
+        </thead>
+        <tbody id="lobbyRows">
+        </tbody>
+    </table>
+</div>
+<script src="~/js/game/index.js"></script>

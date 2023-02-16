@@ -1,0 +1,75 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+/******************** Game Page Items ************************/
+.chat-log ul {
+    padding-left: 0;
+    list-style: none;
+    width: 100%;
+    overflow: scroll;
+    font-size: small;
+    min-height: 150px;
+}
+
+.player-cards {
+
+    width: 100%;
+    height: 100px;
+    border: 1px solid red;
+    overflow: scroll;
+}
+
+.player-cards img {
+    max-height: 100px;
+    min-height: 100px;
+}
+
+#deckArea {
+    height: 100px;
+    width: 100%;
+    border: 1px solid black;
+}
+
+#deckArea img {
+    max-height: 100px;
+    min-height: 100px;
+}
+
+.row img {
+    max-height: 100px;
+    min-height: 100px;
+}
+
+/*.under {
+    position: relative;
+    left: 0px;
+    top: 0px;
+    z-index: -1;
+}
+
+.over {
+    position: absolute;
+    left: 40px;
+    top: 10px;
+    z-index: -1;
+}
+
+.cardInPlayDiv {
+    position: relative;
+}*/

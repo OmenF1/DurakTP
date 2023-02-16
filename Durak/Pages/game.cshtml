@@ -1,0 +1,50 @@
+﻿@page
+@model Durak.Pages.gameModel
+@{
+
+}
+
+<div class="container" style="border: 1px solid black;">
+    <div class="col-6"><input type="button" value="Leave Game" id="btn-leave" class="btn btn-danger" /></div>
+    <div class="row">
+        <div class="col-9" style="border: 1px solid black;" id="startWindow">
+            <div class="row"><input type="button" value="Start" id="startGame" /></div>
+        </div>
+        <div class="col-9" id="playingTable" style="min-height: 500px; max-height: 500px; border: 1px solid black; display: none;">
+            <div id="deckArea">
+            </div>
+            <div class="col-9" style="border: 1px solid black; padding-bottom: 5px; height: 80%; width: 100%;" ondrop="HandleDragDrop(event)" ondragover="allowDrop(event)">
+                <div class="row col-12" id="cardsInPlayArea">
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat window-->
+        <div class="col-3 chat-window" style="border: 1px solid black;">
+
+            <div class="chat-log" style="max-height: auto; min-height: 150px; border: 1px solid black;">
+                <ul id="chatView">
+                </ul>
+            </div>
+            <div class="row p-1 chat-message">
+                <div class="mb-3"><input type="text" id="message" placeholder="type a message.."  class="form-control"/></div>
+                <input type="button" id="sendMessage" value="Send Message" class="btn btn-primary"/>
+            </div>
+            <div class="row p-1">
+                
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="player-cards col-9" id="playerCards">
+        </div>
+    </div>
+</div>
+    <!-- I'm just adding these buttons here for testing purposes until I impliment timers.
+         Once the timer is implimented, the pickup button will remain, but the done attacking will be removed
+         and pickup will have a timeout period as well.
+    -->
+    <input type="button" value="Pick Up" class="btn btn-primary" id="PickUp" disabled/>
+    <input type="button" value="Done Attacking." class="btn btn-primary" id="FinishAttacking" disabled />
+<script src="~/js/game/game.js"></script>
