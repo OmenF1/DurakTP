@@ -294,6 +294,8 @@ namespace Durak.Models
                     gamePlayState.playerOrder.Remove(player);
                 }
             }
+            if (gamePlayState.playerOrder.Count < 2)
+                return;
 
             if (defended)
             {
