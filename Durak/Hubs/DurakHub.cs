@@ -197,6 +197,9 @@ namespace Durak.Hubs
             if (games.FirstOrDefault(i => i.id == groupId).gamePlayState.attackerId != Context.User.Identity.Name)
                 return;
 
+            if (games.FirstOrDefault(i => i.id == groupId).gamePlayState.cardsInPlay.Count() == 0)
+                return;
+
             games.FirstOrDefault(i => i.id == groupId).gamePlayState.checkDurak = true;
             if (games.FirstOrDefault(i => i.id == groupId).EndAttack())
                 await NotifyGameStateChanged(groupId);
