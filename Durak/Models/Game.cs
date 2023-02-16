@@ -287,6 +287,16 @@ namespace Durak.Models
         //  bool defended indicates if the defending player was able to successfully defend the previous round, if not they forfeight their turn to attack.
         private void SetNextPlayers(string attackerId, string defenderId, bool defended)
         {
+            foreach(string player in gamePlayState.playerOrder.ToList())
+            {
+                if (playerHands[player].Count == 0)
+                {
+                    gamePlayState.playerOrder.Remove(player);
+                }
+            }
+            if (gamePlayState.playerOrder.Count < 2)
+                return;
+
             if (defended)
             {
                 gamePlayState.attackerId = defenderId;
