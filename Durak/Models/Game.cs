@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -143,6 +144,32 @@ namespace Durak.Models
                         
                 }
                 return false;
+            }
+
+            //  Here we're checking passing on.  I'm doing this very loosely for now and we will refine this at a later stage, I just want to
+            //  get its basic functionality in for now.
+            if (playerId == gamePlayState.defenderId && !string.IsNullOrEmpty(friendlyPlayedName) && string.IsNullOrEmpty(friendlyCoveredName) && gamePlayState.cardsInPlay.Count > 0 && gameType == GameType.TPEdition)
+            {
+                Card firstCard = deck.GetCardFromFriendlyName(gamePlayState.cardsInPlay.FirstOrDefault().Key);
+                Card playedCard = deck.GetCardFromFriendlyName(friendlyPlayedName);
+                if (firstCard.value != playedCard.value)
+                    return false;
+
+                var valid = gamePlayState.cardsInPlay.Count(x => !string.IsNullOrEmpty(x.Value));
+                if (valid > 0)
+                    return false;
+
+                var nextPlayerID = GetStartingDefender(playerId, _players.Select(p => p.Name).ToList());
+                if (playerHands[nextPlayerID].Count < gamePlayState.cardsInPlay.Count + 1)
+                    return false;
+
+                playerHands[playerId].Remove(playerHands[playerId].Where(c => c.friendlyName == friendlyPlayedName).FirstOrDefault());
+                gamePlayState.cardsInPlay.Add(friendlyPlayedName, null);
+
+                gamePlayState.defenderId = nextPlayerID;
+                if (gamePlayState.attackerId == nextPlayerID)
+                    gamePlayState.attackerId = playerId;
+                return true;
             }
 
             //  Check if defender has made a valid defensive move.
