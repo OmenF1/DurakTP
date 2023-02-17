@@ -13,13 +13,17 @@ var playMode = 0; // 0 = play muted, 1 = attacking, 2 = defending, 3 = bombing.
 //  ----------------- SignalR Messaging Start ----------------//
 
 //  Send Chat Message.
-document.getElementById("sendMessage").addEventListener("click", function (event) {
-    var message = document.getElementById("message").value;
+document.getElementById("message")
+    .addEventListener("keyup", function (event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            var message = document.getElementById("message").value;
 
-    connection.invoke("sendMessage", message, groupId).catch(function (err) {
-        return console.error(err.toString());
-    });
-    event.preventDefault();
+            connection.invoke("sendMessage", message, groupId).catch(function (err) {
+                return console.error(err.toString());
+            });
+            document.getElementById("message").value = "";
+        }
 });
 
 //  Start Game button.
@@ -205,11 +209,8 @@ function UpdateBoardAndGameState(data) {
     }
     ClearCardsFromTable();
     if (Object.keys(data.cardsInPlay).length > 0) {
-        console.log("calling updateCards");
         AddCardsToTable(data.cardsInPlay);
     }
-    console.log(data);
-    
 }
 
 function AddCardsToTable(cardsInPlay) {
