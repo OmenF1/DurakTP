@@ -226,6 +226,7 @@ namespace Durak.Models
                 }
 
             }
+            gamePlayState.cardsRemaining = deck.DeckCount();
             refreshPlayerCards = true;
             UpdateGameState(false);
         }
@@ -247,6 +248,7 @@ namespace Durak.Models
                     kvp.Value.AddRange(deck.DrawCard(cardsNeeded - kvp.Value.Count));
                 }
             }
+            gamePlayState.cardsRemaining = deck.DeckCount();
             refreshPlayerCards = true;
             UpdateGameState(true);
             return true;

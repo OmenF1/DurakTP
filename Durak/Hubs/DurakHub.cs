@@ -136,6 +136,7 @@ namespace Durak.Hubs
             await Clients.Group(groupId).SendAsync(receiveGamePlayState, System.Text.Json.JsonSerializer.Serialize(game.gamePlayState));
             await SendToSinglePlayer(game._players.FirstOrDefault(i => i.Name == game.gamePlayState.defenderId), enableDefenseMode);
             await SendToSinglePlayer(game._players.FirstOrDefault(i => i.Name == game.gamePlayState.attackerId), enableAttackMode);
+            await Clients.Group(groupId).SendAsync(receiveMessage, game.gamePlayState.cardsRemaining);
 
         }
 
@@ -194,6 +195,9 @@ namespace Durak.Hubs
                 return;
 
             if (games.FirstOrDefault(i => i.id == groupId).gamePlayState.attackerId != Context.User.Identity.Name)
+                return;
+
+            if (games.FirstOrDefault(i => i.id == groupId).gamePlayState.cardsInPlay.Count() == 0)
                 return;
 
             games.FirstOrDefault(i => i.id == groupId).gamePlayState.checkDurak = true;
