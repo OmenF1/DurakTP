@@ -118,7 +118,12 @@ namespace Durak.Models
             //  Defender can't play a defensive card before a card has even been played.
             if (playerId == gamePlayState.defenderId && gamePlayState.cardsInPlay.Count == 0)
                 return false;
-           
+
+            //  This will stop a player from getting attacked further even though they're out of cards.
+            //  It doesn't fully solve the problem though, but I can't impliment this logic properly until I've got timers.
+            if (playerId != gamePlayState.defenderId && playerHands[gamePlayState.defenderId].Count == 0)
+                return false;
+
             //  On the opening attack card for the round there's no further processing that needs be done.
             if (playerId != gamePlayState.defenderId && gamePlayState.cardsInPlay.Count == 0)
             {
