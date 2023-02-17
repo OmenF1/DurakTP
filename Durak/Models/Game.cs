@@ -214,7 +214,7 @@ namespace Durak.Models
             {
                 playerHands[gamePlayState.defenderId].Add(deck.GetCardFromFriendlyName(kvp.Key));
                 if (kvp.Value != null)
-                    playerHands[gamePlayState.defenderId].Add(deck.GetCardFromFriendlyName(kvp.Key));
+                    playerHands[gamePlayState.defenderId].Add(deck.GetCardFromFriendlyName(kvp.Value));
 
             }
             gamePlayState.cardsInPlay.Clear();
