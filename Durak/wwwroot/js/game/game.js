@@ -10,6 +10,7 @@ var canPlayCards = false;
 var playMode = 0; // 0 = play muted, 1 = attacking, 2 = defending, 3 = bombing.
 
 
+
 //  ----------------- SignalR Messaging Start ----------------//
 
 //  Send Chat Message.
@@ -131,6 +132,9 @@ connection.on("RemoveCardFromHand", function (card) {
     playerCard.remove();
 })
 
+connection.on("SetPlayerName", function (name) {
+    playerId = name;
+})
 
 
 //  ----------------- SignalR Messaging end - ----------------//
@@ -200,7 +204,7 @@ function HandleDragDrop(ev) {
 
 function UpdateBoardAndGameState(data) {
     var exists = document.getElementById("nuke-img");
-    if (typeof (exists) == "undefined" || exists == null) {
+    if (typeof (exists) == "undefined" || exists == null || exists.src != GetCardPath(data.nuke.friendlyName)) {
         var nukeImage = document.createElement("img");
         nukeImage.id = "nuke-img"
         nukeImage.src = GetCardPath(data.nuke.friendlyName);
@@ -210,6 +214,26 @@ function UpdateBoardAndGameState(data) {
     ClearCardsFromTable();
     if (Object.keys(data.cardsInPlay).length > 0) {
         AddCardsToTable(data.cardsInPlay);
+    }
+    console.log("calling set players");
+    SetPlayerPositions(data.playerOrder, data.attackerId, data.defenderId);
+}
+
+function SetPlayerPositions(players, attacker, defender) {
+    console.log("Setting Positions");
+    for (var i = 0; i <= players.length; i++) {
+        console.log(i);
+        var x = document.getElementById("seat" + (i + 1))
+        x.textContent = players[i];
+        if (attacker == players[i]) {
+            x.style.backgroundColor = "red";
+        }
+        else if (defender == players[i]) {
+            x.style.backgroundColor = "green";
+        }
+        else {
+            x.style.backgroundColor = "white";
+        }
     }
 }
 

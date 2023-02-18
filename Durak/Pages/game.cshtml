@@ -5,19 +5,25 @@
 }
 
 <div class="container" style="border: 1px solid black;">
-    <div class="col-6"><input type="button" value="Leave Game" id="btn-leave" class="btn btn-danger" /></div>
+    <div class="col-6">
+        <input type="button" value="Start" id="startGame" class="btn btn-success" />
+        <input type="button" value="Leave Game" id="btn-leave" class="btn btn-danger" />
+        <input type="button" value="Pick Up" class="btn btn-primary" id="PickUp" disabled />
+        <input type="button" value="Done Attacking." class="btn btn-primary" id="FinishAttacking" disabled />
+    </div>
+
     <div class="row">
         <div class="col-12" style="border: 1px solid black;" id="startWindow">
-            <div class="row"><input type="button" value="Start" id="startGame" class="btn btn-success"/></div>
+            <div class="row"></div>
         </div>
         <div class="col-12" style="border: 1px solid black;">
             <div class="row">
-                <div class="col-4" style="border: 1px solid black;">Player1</div>
-                <div class="col-4" style="border: 1px solid black;">Player1</div>
-                <div class="col-4" style="border: 1px solid black;">Player1</div>
+                <div class="col-4" style="border: 1px solid black;" id="seat1">Seat 1</div>
+                <div class="col-4" style="border: 1px solid black;" id="seat2">Seat 2</div>
+                <div class="col-4" style="border: 1px solid black;" id="seat3">Seat 3</div>
             </div>
             <div class="row">
-                <div class="col-1" style="border: 1px solid black;">player1</div>
+                <div class="col-1" style="border: 1px solid black;" id="seat8">Seat 8</div>
                 <div class="col-8" style="border: 1px solid black; height: 500px;">
                     <div class="col-9" id="playingTable" style="min-height: 500px; max-height: 500px; border: 1px solid black; display: none;">
                         <div id="deckArea">
@@ -28,7 +34,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-1" style="border: 1px solid black;">player</div>
+                <div class="col-1" style="border: 1px solid black;" id="seat4">Seat 4</div>
                 <div class="col-2">
                     <!-- Chat window-->
                     <div class="chat-window" style="border: 1px solid black;">
@@ -46,9 +52,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-4" style="border: 1px solid black;">Player1</div>
-                <div class="col-4" style="border: 1px solid black;">Player1</div>
-                <div class="col-4" style="border: 1px solid black;">Player1</div>
+                <div class="col-4" style="border: 1px solid black;" id="seat7">Seat 7</div>
+                <div class="col-4" style="border: 1px solid black;" id="seat6">Seat 6</div>
+                <div class="col-4" style="border: 1px solid black;" id="seat5">Seat 5</div>
             </div>
         </div>
     </div>
@@ -61,6 +67,5 @@
          Once the timer is implimented, the pickup button will remain, but the done attacking will be removed
          and pickup will have a timeout period as well.
     -->
-    <input type="button" value="Pick Up" class="btn btn-primary" id="PickUp" disabled/>
-    <input type="button" value="Done Attacking." class="btn btn-primary" id="FinishAttacking" disabled />
+
 <script src="~/js/game/game.js"></script>
