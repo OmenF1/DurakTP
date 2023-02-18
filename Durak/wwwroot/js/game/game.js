@@ -201,15 +201,25 @@ function HandleDragDrop(ev) {
     }
     
 }
-
+/* I know there's duplicate code, here I'll clean up later. */
 function UpdateBoardAndGameState(data) {
     var exists = document.getElementById("nuke-img");
-    if (typeof (exists) == "undefined" || exists == null || exists.src != GetCardPath(data.nuke.friendlyName)) {
+    if (typeof (exists) == "undefined" || exists == null) {
         var nukeImage = document.createElement("img");
         nukeImage.id = "nuke-img"
         nukeImage.src = GetCardPath(data.nuke.friendlyName);
         var deckAreaLocation = document.getElementById("deckArea");
         deckAreaLocation.appendChild(nukeImage);
+    }
+    else {
+        if (exists.src != GetCardPath(data.nuke.friendlyName)) {
+            exists.remove();
+            var nukeImage = document.createElement("img");
+            nukeImage.id = "nuke-img"
+            nukeImage.src = GetCardPath(data.nuke.friendlyName);
+            var deckAreaLocation = document.getElementById("deckArea");
+            deckAreaLocation.appendChild(nukeImage);
+        }
     }
     ClearCardsFromTable();
     if (Object.keys(data.cardsInPlay).length > 0) {

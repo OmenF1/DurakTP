@@ -25,10 +25,10 @@
             <div class="row">
                 <div class="col-1" style="border: 1px solid black;" id="seat8">Seat 8</div>
                 <div class="col-8" style="border: 1px solid black; height: 500px;">
-                    <div class="col-9" id="playingTable" style="min-height: 500px; max-height: 500px; border: 1px solid black; display: none;">
+                    <div class="col-9 table-container" id="playingTable">
                         <div id="deckArea">
                         </div>
-                        <div class="col-9" style="border: 1px solid black; padding-bottom: 5px; height: 80%; width: 100%;" ondrop="HandleDragDrop(event)" ondragover="allowDrop(event)">
+                        <div class="col-9 cards-drop-area" ondrop="HandleDragDrop(event)" ondragover="allowDrop(event)">
                             <div class="row col-12" id="cardsInPlayArea">
                             </div>
                         </div>

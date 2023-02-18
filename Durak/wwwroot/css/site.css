@@ -28,6 +28,20 @@ body {
     max-height: 150px;
 }
 
+.table-container {
+    min-height: 500px;
+    max-height: 500px;
+    border: 1px solid black;
+    display: none;
+}
+
+.cards-drop-area {
+    border: 1px solid black;
+    padding-bottom: 5px;
+    height: 400px;
+    width: 100%;
+}
+
 .player-cards {
 
     width: 100%;
@@ -37,9 +51,14 @@ body {
     white-space: nowrap;
 }
 
+.card-img {
+    max-height: 80px;
+    min-height: 80px;
+}
+
 .player-cards img {
-    max-height: 100px;
-    min-height: 100px;
+    max-height: 80px;
+    min-height: 80px;
 }
 
 #deckArea {
@@ -49,13 +68,13 @@ body {
 }
 
 #deckArea img {
-    max-height: 100px;
-    min-height: 100px;
+    max-height: 80px;
+    min-height: 80px;
 }
 
 .row img {
-    max-height: 100px;
-    min-height: 100px;
+    max-height: 80px;
+    min-height: 80px;
 }
 
 /*.under {
