@@ -49,6 +49,26 @@ body {
     width: 100%;
 }
 
+.base-seat {
+    background: white;
+    border: 1px solid black;
+}
+
+.player-seat{
+    background: cyan;
+    border: 1px solid black;
+}
+
+.player-attacker {
+    background: green;
+    border: 1px solid green;
+}
+
+.player-defender {
+    background: red;
+    border: 1px solid red;
+}
+
 .player-cards {
 
     width: 100%;

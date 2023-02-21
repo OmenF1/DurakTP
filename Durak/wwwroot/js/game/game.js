@@ -136,6 +136,12 @@ connection.on("SetPlayerName", function (name) {
     playerId = name;
 })
 
+connection.on("ReceivePlayerSeating", function (players) {
+    const playerData = JSON.parse(players);
+    console.log(playerData);
+    console.log("calling set players");
+    SetPlayerPositions(playerData);
+})
 
 //  ----------------- SignalR Messaging end - ----------------//
 
@@ -225,24 +231,45 @@ function UpdateBoardAndGameState(data) {
     if (Object.keys(data.cardsInPlay).length > 0) {
         AddCardsToTable(data.cardsInPlay);
     }
-    console.log("calling set players");
-    SetPlayerPositions(data.playerOrder, data.attackerId, data.defenderId);
+
+    UpdateDefenderAttacker(data.defenderId, data.attackerId);
 }
 
-function SetPlayerPositions(players, attacker, defender) {
-    console.log("Setting Positions");
-    for (var i = 0; i <= players.length; i++) {
-        console.log(i);
+function SetPlayerPositions(players) {
+    
+    for (var i = 0; i <= 7; i++) {
         var x = document.getElementById("seat" + (i + 1))
-        x.textContent = players[i];
-        if (attacker == players[i]) {
-            x.style.backgroundColor = "red";
-        }
-        else if (defender == players[i]) {
-            x.style.backgroundColor = "green";
+        if (i < players.length) {
+            x.textContent = players[i];
+            x.id = players[i];
+            x.classList.remove("base-seat");
+            x.classList.add("base-player");
         }
         else {
-            x.style.backgroundColor = "white";
+            x.textContent = "Empty Seat";
+            x.removeAttribute("id");
+            x.classList.remove("base-player");
+            x.classList.add("base-seat");
+        }
+    }
+}
+
+function UpdateDefenderAttacker(defender, attacker) {
+    var seats = document.getElementsByClassName("player-seat")
+
+    for (var i = 0; i < seats.length; i++) {
+        if (seats[i].id == defender) {
+            seats[i].classList.add("player-defender");
+            seats[i].classList.remove("player-attacker");
+        }
+        else if (seats[i].id == attacker) {
+            seats[i].classList.add("player-attacker");
+            seats[i].classList.remove("player-defender");
+        }
+        else {
+            seats[i].classList.remove("player-attacker");
+            seats[i].classList.remove("player-defender");
+            seats[i].classList.add("base-player");
         }
     }
 }
