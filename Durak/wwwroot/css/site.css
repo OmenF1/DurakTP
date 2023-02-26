@@ -47,6 +47,8 @@ body {
     padding-bottom: 5px;
     height: 400px;
     width: 100%;
+    background: url("../images/tableSurface.jpg") 100% 100%;
+    background-size: cover;
 }
 
 .base-seat {
