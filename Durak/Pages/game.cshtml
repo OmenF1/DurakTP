@@ -26,7 +26,13 @@
                 <div class="col-1 player-seat" id="seat8">Seat 8</div>
                 <div class="col-8" style="border: 1px solid black; height: 500px;">
                     <div class="col-9 table-container" id="playingTable">
-                        <div id="deckArea">
+                        <div id="deckArea" class="row">
+                            <div class="col-1" id="nuke-holder">
+
+                            </div>
+                            <div class="col-1 card-count" id="card-count-container">
+                                deck: 14
+                            </div>
                         </div>
                         <div class="col-9 cards-drop-area" ondrop="HandleDragDrop(event)" ondragover="allowDrop(event)">
                             <div class="row col-12" id="cardsInPlayArea">
