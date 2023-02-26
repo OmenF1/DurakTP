@@ -31,12 +31,21 @@ body {
 .chat-log {
     max-height: auto;
     height: 80%;
-    border: 1px solid black;
+}
+
+#deckArea {
+    padding: 5px;
+    height: 100px;
+    width: 100%;
+}
+
+#deckArea img {
+    max-height: 80px;
+    min-height: 80px;
 }
 
 .table-container {
-    min-height: 500px;
-    max-height: 500px;
+height:100%;
     border: 1px solid black;
     display: none;
     width: 100%;
@@ -45,7 +54,7 @@ body {
 .cards-drop-area {
     border: 1px solid black;
     padding-bottom: 5px;
-    height: 400px;
+    height: 100%;
     width: 100%;
     background: url("../images/tableSurface.jpg") 100% 100%;
     background-size: cover;
@@ -75,7 +84,6 @@ body {
 
     width: 100%;
     height: 120px;
-    border: 1px solid red;
     overflow-x: scroll;
     overflow-y: hidden;
     white-space: nowrap;
@@ -87,17 +95,6 @@ body {
 }
 
 .player-cards img {
-    max-height: 80px;
-    min-height: 80px;
-}
-
-#deckArea {
-    height: 100px;
-    width: 100%;
-    border: 1px solid black;
-}
-
-#deckArea img {
     max-height: 80px;
     min-height: 80px;
 }
@@ -114,21 +111,3 @@ body {
     background-color: #d5f2f2;
     border-radius: 3px;
 }
-
-/*.under {
-    position: relative;
-    left: 0px;
-    top: 0px;
-    z-index: -1;
-}
-
-.over {
-    position: absolute;
-    left: 40px;
-    top: 10px;
-    z-index: -1;
-}
-
-.cardInPlayDiv {
-    position: relative;
-}*/
