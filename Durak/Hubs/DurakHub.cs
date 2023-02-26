@@ -108,7 +108,7 @@ namespace Durak.Hubs
             //  Notify connected client browsers to start preparing the table
             await Clients.Group(groupId).SendAsync(startGame);
             await RefreshPlayerHands(groupId);
-            await Clients.Group(groupId).SendAsync(receivePlayerSeating, System.Text.Json.JsonSerializer.Serialize(games.FirstOrDefault(i => i.id == groupId).gamePlayState.playerOrder));
+            await Clients.Group(groupId).SendAsync(receivePlayerSeating, System.Text.Json.JsonSerializer.Serialize(games.FirstOrDefault(i => i.id == groupId).gamePlayState.tableOrder));
             await NotifyGameStateChanged(groupId);
         }
 
@@ -238,6 +238,8 @@ namespace Durak.Hubs
             {
                 await SendToSinglePlayer(player, enableAttackMode);
             }
+            await Clients.Group(groupId).SendAsync(receivePlayerSeating, System.Text.Json.JsonSerializer.Serialize(games.FirstOrDefault(i => i.id == groupId).gamePlayState.tableOrder));
+
         }
 
         //  I'll come back to this, I'm just thinking about when a person disconnects

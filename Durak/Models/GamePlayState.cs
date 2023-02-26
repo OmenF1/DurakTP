@@ -12,6 +12,7 @@
         //  I'm also using a string for now as it's not liking the objects when converting to json.
         public Dictionary<string, string?>? cardsInPlay  {get; set;} 
         public List<string> playerOrder { get; set; }
+        public List<string> tableOrder { get; set; }
         public int cardsRemaining { get; set; }
         public bool checkDurak;
     }
