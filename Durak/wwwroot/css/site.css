@@ -35,8 +35,7 @@ body {
 }
 
 .table-container {
-    min-height: 500px;
-    max-height: 500px;
+height:100%;
     border: 1px solid black;
     display: none;
     width: 100%;
@@ -45,7 +44,7 @@ body {
 .cards-drop-area {
     border: 1px solid black;
     padding-bottom: 5px;
-    height: 400px;
+    height: 100%;
     width: 100%;
     background: url("../images/tableSurface.jpg") 100% 100%;
     background-size: cover;
