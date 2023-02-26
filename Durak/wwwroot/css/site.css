@@ -47,6 +47,8 @@ body {
     padding-bottom: 5px;
     height: 400px;
     width: 100%;
+    background: url("../images/tableSurface.jpg") 100% 100%;
+    background-size: cover;
 }
 
 .base-seat {
@@ -54,18 +56,18 @@ body {
     border: 1px solid black;
 }
 
-.player-seat{
-    background: cyan;
+.player-seat {
+    background: #d5f2f2;
     border: 1px solid black;
 }
 
 .player-attacker {
-    background: green;
+    background: #93edce;
     border: 1px solid green;
 }
 
 .player-defender {
-    background: red;
+    background: #f27272;
     border: 1px solid red;
 }
 
