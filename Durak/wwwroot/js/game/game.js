@@ -210,27 +210,38 @@ function HandleDragDrop(ev) {
 /* I know there's duplicate code, here I'll clean up later. */
 function UpdateBoardAndGameState(data) {
     var exists = document.getElementById("nuke-img");
-    if (typeof (exists) == "undefined" || exists == null) {
-        var nukeImage = document.createElement("img");
-        nukeImage.id = "nuke-img"
-        nukeImage.src = GetCardPath(data.nuke.friendlyName);
-        var deckAreaLocation = document.getElementById("deckArea");
-        deckAreaLocation.appendChild(nukeImage);
-    }
-    else {
-        if (exists.src != GetCardPath(data.nuke.friendlyName)) {
-            exists.remove();
+    if (data.cardsRemaining != 0) {
+        if (typeof (exists) == "undefined" || exists == null) {
             var nukeImage = document.createElement("img");
             nukeImage.id = "nuke-img"
             nukeImage.src = GetCardPath(data.nuke.friendlyName);
-            var deckAreaLocation = document.getElementById("deckArea");
+            var deckAreaLocation = document.getElementById("nuke-holder");
             deckAreaLocation.appendChild(nukeImage);
         }
+        else {
+            if (exists.src != GetCardPath(data.nuke.friendlyName)) {
+                exists.remove();
+                var nukeImage = document.createElement("img");
+                nukeImage.id = "nuke-img"
+                nukeImage.src = GetCardPath(data.nuke.friendlyName);
+                var deckAreaLocation = document.getElementById("nuke-holder");
+                deckAreaLocation.appendChild(nukeImage);
+            }
+        }
+    }
+    else {
+        if (!((typeof (exists) == "undefined" || exists == null))) {
+            exists.remove();
+        }
+        
     }
     ClearCardsFromTable();
     if (Object.keys(data.cardsInPlay).length > 0) {
         AddCardsToTable(data.cardsInPlay);
     }
+
+    var deckCount = document.getElementById("card-count-container")
+    deckCount.innerText = data.cardsRemaining;
 
     UpdateDefenderAttacker(data.defenderId, data.attackerId);
 }

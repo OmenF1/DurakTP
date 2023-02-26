@@ -128,7 +128,6 @@ namespace Durak.Hubs
                 {
                     games.FirstOrDefault(i => i.id == groupId).gamePlayState.checkDurak = false;
                 }
-                await Clients.Group(groupId).SendAsync(receiveMessage, serverSend, game.gamePlayState.cardsRemaining);
             }
 
 
