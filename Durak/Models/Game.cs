@@ -94,6 +94,7 @@ namespace Durak.Models
                 cardsInPlay = new Dictionary<string, string?>(),
                 nuke = nuke,
                 playerOrder = _players.Select(p => p.Name).ToList(),
+                tableOrder = _players.Select(p => p.Name).ToList(),
                 attackerId = _startingAttacker,
                 defenderId = _startingDefender,
                 cardsRemaining = deck.DeckCount()
@@ -304,7 +305,7 @@ namespace Durak.Models
             if (gamePlayState.playerOrder.Count < 2)
                 return;
 
-            if (defended)
+            if (defended && playerHands[defenderId].Count > 0)
             {
                 gamePlayState.attackerId = defenderId;
                 if (gamePlayState.playerOrder.FindIndex(a => a == defenderId) == gamePlayState.playerOrder.Count - 1)

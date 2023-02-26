@@ -19,6 +19,7 @@ namespace Durak.Hubs
         private const string enableBombMode = "EnableBombMode"; // We need to have a bomb mode because attacking and bombing are have different requirements.
         private const string serverSend = "Server";
         private const string endGame = "EndGame";
+        private const string receivePlayerSeating = "ReceivePlayerSeating";
 
         private static List<Game> games = new List<Game>();
 
@@ -107,6 +108,7 @@ namespace Durak.Hubs
             //  Notify connected client browsers to start preparing the table
             await Clients.Group(groupId).SendAsync(startGame);
             await RefreshPlayerHands(groupId);
+            await Clients.Group(groupId).SendAsync(receivePlayerSeating, System.Text.Json.JsonSerializer.Serialize(games.FirstOrDefault(i => i.id == groupId).gamePlayState.tableOrder));
             await NotifyGameStateChanged(groupId);
         }
 
@@ -236,6 +238,8 @@ namespace Durak.Hubs
             {
                 await SendToSinglePlayer(player, enableAttackMode);
             }
+            await Clients.Group(groupId).SendAsync(receivePlayerSeating, System.Text.Json.JsonSerializer.Serialize(games.FirstOrDefault(i => i.id == groupId).gamePlayState.tableOrder));
+
         }
 
         //  I'll come back to this, I'm just thinking about when a person disconnects
