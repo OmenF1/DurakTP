@@ -56,18 +56,18 @@ body {
     border: 1px solid black;
 }
 
-.player-seat{
-    background: cyan;
+.player-seat {
+    background: #d5f2f2;
     border: 1px solid black;
 }
 
 .player-attacker {
-    background: green;
+    background: #93edce;
     border: 1px solid green;
 }
 
 .player-defender {
-    background: red;
+    background: #f27272;
     border: 1px solid red;
 }
 
