@@ -248,8 +248,8 @@ function UpdateBoardAndGameState(data) {
 
 function SetPlayerPositions(players) {
     
-    for (var i = 0; i <= 7; i++) {
-        var x = document.getElementById("seat" + (i + 1))
+    for (let i = 0; i <= 7; i++) {
+        let x = document.getElementById("seat" + (i + 1))
         if (i < players.length) {
             x.textContent = players[i];
             x.id = players[i];
@@ -266,9 +266,9 @@ function SetPlayerPositions(players) {
 }
 
 function UpdateDefenderAttacker(defender, attacker) {
-    var seats = document.getElementsByClassName("player-seat")
+    let seats = document.getElementsByClassName("player-seat")
 
-    for (var i = 0; i < seats.length; i++) {
+    for (let i = 0; i < seats.length; i++) {
         if (seats[i].id == defender) {
             seats[i].classList.add("player-defender");
             seats[i].classList.remove("player-attacker");
@@ -287,12 +287,14 @@ function UpdateDefenderAttacker(defender, attacker) {
 
 function AddCardsToTable(cardsInPlay) {
 
+    const fragment = new DocumentFragment();
+
     for (const [key, value] of Object.entries(cardsInPlay)) {
 
-        var imgContainer = document.createElement("div");
+        const imgContainer = document.createElement("div");
         imgContainer.className = "col-3 cardInPlayDiv";
 
-        var cardAttacking = document.createElement("img");
+        const cardAttacking = document.createElement("img");
         cardAttacking.id = key;
         cardAttacking.className = "under";
         cardAttacking.src = GetCardPath(key);
@@ -308,8 +310,9 @@ function AddCardsToTable(cardsInPlay) {
             cardAttacking.ondrop = "HandleDragDrop(event)";
             cardAttacking.ondragover = "allowDrop(event)";
         }
-        tableLocation.appendChild(imgContainer);
+        fragment.appendChild(imgContainer);
     }
+    tableLocation.appendChild(fragment);
 }
 
 function ClearCardsFromTable() {
