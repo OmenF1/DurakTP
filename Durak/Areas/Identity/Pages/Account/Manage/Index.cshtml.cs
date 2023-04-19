@@ -57,7 +57,7 @@ namespace Durak.Areas.Identity.Pages.Account.Manage
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Phone]
-            [Display(Name = "Phone numberss")]
+            [Display(Name = "Phone numbers")]
             public string PhoneNumber { get; set; }
 
             [Display(Name = "First name")]
@@ -75,15 +75,18 @@ namespace Durak.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            //var firstName = await _userManager.GetFirstNameAsync(user);
-            //var lastName = await _userManager.GetLastNameAsync(user);
-            //var nickName = await _userManager.GetNickNameAsync(user);
+            var firstName = user.FirstName;
+            var lastName = user.LastName;
+            var nickName = user.NickName;
 
             Username = userName;
 
             Input = new InputModel
             {
                 PhoneNumber = phoneNumber
+                , FirstName = firstName
+                , LastName = lastName
+                , NickName = nickName
             };
         }
 
@@ -123,6 +126,19 @@ namespace Durak.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+
+            //  Validations etc to come.
+           if(Input.FirstName != user.FirstName)
+                user.FirstName = Input.FirstName;
+
+            if (Input.LastName != user.LastName)
+                user.LastName = Input.LastName;
+
+            if (Input.NickName != user.NickName)
+                user.NickName = Input.NickName;
+
+            await _userManager.UpdateAsync(user);
+
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
