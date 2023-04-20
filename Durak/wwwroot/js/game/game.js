@@ -97,6 +97,14 @@ connection.on("ReceiveCards", function (message) {
     UpdatePlayerHand(cardsArray);
 });
 
+connection.on("TimerEnd", function (message) {
+    console.log("Received TimerEnd");
+    connection.invoke("TimerEnd", groupId).catch(function (err) {
+        return console.error(err.toString());
+    });
+    event.preventDefault();
+});
+
 //  Enable attack mode.
 connection.on("EnableAttackMode", function (messaage) {
     canPlayCards = true;
@@ -105,6 +113,10 @@ connection.on("EnableAttackMode", function (messaage) {
     document.getElementById("PickUp").disabled = true;
 });
 
+connection.on("NotifyAttacking", function () {
+    showMessage("You are now attacking", 3000)
+})
+
 //  Enable defense mode.
 connection.on("EnableDefenseMode", function (messaage) {
     canPlayCards = true;
@@ -112,6 +124,10 @@ connection.on("EnableDefenseMode", function (messaage) {
     document.getElementById("PickUp").removeAttribute("disabled");
     document.getElementById("FinishAttacking").disabled = true;
 });
+
+connection.on("NotifyDefending", function() {
+    showMessage("You are now defending", 3000);
+})
 
 //  Enable defense mode.
 connection.on("EnableBombMode", function (messaage) {
@@ -319,3 +335,18 @@ function ClearCardsFromTable() {
     while (tableLocation.firstChild) tableLocation.removeChild(tableLocation.firstChild);
 }
 //  ----------------- Game Functions End ---------------------//
+
+
+function showMessage(text, duration) {
+    let messageBox = document.getElementById("message-box");
+    let messageText = document.getElementById("message-text");
+    console.log("showing message");
+
+    messageText.textContent = text;
+
+    messageBox.classList.add("show");
+
+    setTimeout(function () {
+        messageBox.classList.remove("show");
+    }, duration);
+}

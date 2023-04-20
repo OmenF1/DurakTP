@@ -20,6 +20,8 @@ namespace Durak.Hubs
         private const string serverSend = "Server";
         private const string endGame = "EndGame";
         private const string receivePlayerSeating = "ReceivePlayerSeating";
+        private const string notifyAttacking = "NotifyAttacking";
+        private const string notifyDefending = "NotifyDefending";
 
         private static List<Game> games = new List<Game>();
 
@@ -36,7 +38,7 @@ namespace Durak.Hubs
             {
                 if (gType == null || dType == null)
                     return "";
-                games.Add(new Game(groupId, Enum.Parse<GameType>(gType), Enum.Parse<DeckType>(dType)));
+                games.Add(new Game(groupId, Enum.Parse<GameType>(gType), Enum.Parse<DeckType>(dType), Context.GetHttpContext().RequestServices.GetRequiredService<IHubContext<DurakHub>>()));
             }
             bool notify = games.FirstOrDefault(i => i.id == groupId).AddPlayer(Context.ConnectionId, Context.User.Identity.Name, Context.UserIdentifier);
             await Groups.AddToGroupAsync(Context.ConnectionId, groupId);
@@ -94,6 +96,10 @@ namespace Durak.Hubs
             await Clients.Group(groupId).SendAsync("ReceiveMessage", Context.User.Identity.Name, message);
         }
 
+        public async Task TimerEnd(string groupId)
+        {
+            NotifyGameStateChanged(groupId);
+        }
 
         public async Task StartGame(string groupId)
         {
@@ -136,9 +142,17 @@ namespace Durak.Hubs
             if (game.gameType == GameType.TPEdition)
                 await Clients.Group(groupId).SendAsync(enableBombMode);
             await Clients.Group(groupId).SendAsync(receiveGamePlayState, System.Text.Json.JsonSerializer.Serialize(game.gamePlayState));
-            await SendToSinglePlayer(game._players.FirstOrDefault(i => i.Name == game.gamePlayState.defenderId), enableDefenseMode);
-            await SendToSinglePlayer(game._players.FirstOrDefault(i => i.Name == game.gamePlayState.attackerId), enableAttackMode);
+            var defender = game._players.FirstOrDefault(i => i.Name == game.gamePlayState.defenderId);
+            var attacker = game._players.FirstOrDefault(i => i.Name == game.gamePlayState.attackerId);
+            await SendToSinglePlayer(defender, enableDefenseMode);
+            await SendToSinglePlayer(attacker, enableAttackMode);
 
+            if (game.notifyNewTurn)
+            {
+                await SendToSinglePlayer(defender, notifyDefending);
+                await SendToSinglePlayer(attacker, notifyAttacking);
+                game.notifyNewTurn = false;
+            }
         }
 
         private async Task RefreshPlayerHands(string groupId)
