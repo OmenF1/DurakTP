@@ -151,6 +151,7 @@ namespace Durak.Hubs
             {
                 await SendToSinglePlayer(defender, notifyDefending);
                 await SendToSinglePlayer(attacker, notifyAttacking);
+                await Clients.Group(groupId).SendAsync("StartTimer", 30);
                 game.notifyNewTurn = false;
             }
         }

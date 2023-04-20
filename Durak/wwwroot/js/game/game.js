@@ -159,6 +159,11 @@ connection.on("ReceivePlayerSeating", function (players) {
     SetPlayerPositions(playerData);
 })
 
+connection.on("StartTimer", function (duration) {
+    console.log("startingTimer");
+    startTimer(duration);
+})
+
 //  ----------------- SignalR Messaging end - ----------------//
 
 //  ----------------- Game Functions Start -------------------//
@@ -336,7 +341,7 @@ function ClearCardsFromTable() {
 }
 //  ----------------- Game Functions End ---------------------//
 
-
+//  ----------------- Front End Misc ------------------------//
 function showMessage(text, duration) {
     let messageBox = document.getElementById("message-box");
     let messageText = document.getElementById("message-text");
@@ -349,4 +354,21 @@ function showMessage(text, duration) {
     setTimeout(function () {
         messageBox.classList.remove("show");
     }, duration);
+}
+
+
+let intervalId;
+function startTimer(duration) {
+    let timer = duration, seconds;
+    let timerLocation = document.getElementById("timer");
+    clearInterval(intervalId);
+    intervalId = setInterval(function () {
+        seconds = parseInt(timer % 60, 10);
+
+        timerLocation.textContent = seconds;
+
+        if (--timer < 0) {
+            clearInterval(intervalId);
+        }
+    }, 1000);
 }
