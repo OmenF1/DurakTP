@@ -162,11 +162,11 @@ namespace Durak.Hubs
 
             if (!games.Exists(i => i.id == groupId))
                 return;
+            var game = games.FirstOrDefault(i => i.id == groupId);
 
-            if (games.FirstOrDefault(i => i.id == groupId).CardPlayed(Context.User.Identity.Name, cardFriendlyName, cardDefendingName))
+            if (game.CardPlayed(Context.User.Identity.Name, cardFriendlyName, cardDefendingName))
             {
-                //await Clients.Client(Context.ConnectionId).SendAsync("RemoveCardFromHand", cardFriendlyName);
-                var _player = games.FirstOrDefault(i => i.id == groupId)._players.FirstOrDefault(p => p.Name == Context.User.Identity.Name);
+                var _player = game._players.FirstOrDefault(p => p.Name == Context.User.Identity.Name);
                 await SendToSinglePlayer(_player, "RemoveCardFromHand", cardFriendlyName);
                 await NotifyGameStateChanged(groupId);
             }
@@ -178,14 +178,16 @@ namespace Durak.Hubs
             if (!games.Exists(i => i.id == groupId))
                 return;
 
-            if (games.FirstOrDefault(i => i.id == groupId).gamePlayState.defenderId != Context.User.Identity.Name)
+            var game = games.FirstOrDefault(i => i.id == groupId);
+
+            if (game.gamePlayState.defenderId != Context.User.Identity.Name)
                 return;
 
-            if (games.FirstOrDefault(i => i.id == groupId).gamePlayState.cardsInPlay.Count() == 0)
+            if (game.gamePlayState.cardsInPlay.Count() == 0)
                 return;
 
-            games.FirstOrDefault(i => i.id == groupId).PickUp();
-            games.FirstOrDefault(i => i.id == groupId).gamePlayState.checkDurak = true;
+            game.PickUp();
+           game.gamePlayState.checkDurak = true;
 
             await NotifyGameStateChanged(groupId);
         }
@@ -195,14 +197,16 @@ namespace Durak.Hubs
             if (!games.Exists(i => i.id == groupId))
                 return;
 
-            if (games.FirstOrDefault(i => i.id == groupId).gamePlayState.attackerId != Context.User.Identity.Name)
+            var game = games.FirstOrDefault(i => i.id == groupId);
+
+            if (game.gamePlayState.attackerId != Context.User.Identity.Name)
                 return;
 
-            if (games.FirstOrDefault(i => i.id == groupId).gamePlayState.cardsInPlay.Count() == 0)
+            if (game.gamePlayState.cardsInPlay.Count() == 0)
                 return;
 
-            games.FirstOrDefault(i => i.id == groupId).gamePlayState.checkDurak = true;
-            if (games.FirstOrDefault(i => i.id == groupId).EndAttack())
+            game.gamePlayState.checkDurak = true;
+            if (game.EndAttack())
                 await NotifyGameStateChanged(groupId);
         }
 
