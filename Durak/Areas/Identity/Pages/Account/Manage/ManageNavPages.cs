@@ -20,6 +20,11 @@ namespace  Durak.Areas.Identity.Pages.Account.Manage
         public static string Index => "Index";
 
         /// <summary>
+        ///     Custom: Stats string
+        /// </summary>
+        public static string Stats => "Stats";
+
+        /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
@@ -66,6 +71,11 @@ namespace  Durak.Areas.Identity.Pages.Account.Manage
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
+
+        /// <summary>
+        ///     Custom: Stats Nav UI
+        /// </summary>
+        public static string StatsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Stats);
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
