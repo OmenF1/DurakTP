@@ -19,7 +19,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 builder.Services.AddAuthentication().AddGoogle(googleOptions =>
 {
     googleOptions.ClientId = builder.Configuration["GoogleClientID"];
-    googleOptions.ClientSecret = builder.Configuration["ClientSecret"];
+    googleOptions.ClientSecret = builder.Configuration["GoogleClientSecret"];
 });
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
