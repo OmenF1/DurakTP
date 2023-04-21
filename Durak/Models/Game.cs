@@ -32,7 +32,7 @@ namespace Durak.Models
         public GameState state { get; set; }
         public string id { get; set; }
         private System.Timers.Timer playTimer;
-        public const int timerDuration = 15;
+        public int timerDuration = 15;
         private IHubContext<DurakHub> _hubContext;
         private bool callHub = false;
         public bool notifyNewTurn = true;
@@ -196,7 +196,7 @@ namespace Durak.Models
             }
 
             //  Check if defender has made a valid defensive move.
-            if (playerId == gamePlayState.defenderId && !string.IsNullOrEmpty(friendlyCoveredName) && !string.IsNullOrEmpty(friendlyPlayedName) && !allowPickUpPass)
+            if (playerId == gamePlayState.defenderId && !string.IsNullOrEmpty(friendlyCoveredName) && !string.IsNullOrEmpty(friendlyPlayedName) && allowPickUpPass)
             {
                 Card attackingCard = deck.GetCardFromFriendlyName(friendlyCoveredName);
                 Card defendingCard = deck.GetCardFromFriendlyName(friendlyPlayedName);
@@ -218,6 +218,13 @@ namespace Durak.Models
                 //  The defending card is valid, cover the attacking card.
                 playerHands[playerId].Remove(playerHands[playerId].Where(c => c.friendlyName == friendlyPlayedName).FirstOrDefault());
                 gamePlayState.cardsInPlay[friendlyCoveredName] = friendlyPlayedName;
+
+                if (playerHands[playerId].Count == 0)
+                {
+                    EndAttack();
+                    gamePlayState.checkDurak = true;
+                    return true;
+                }    
                 StartTurnTimer(timerDuration);
                 return true;
             }
@@ -232,7 +239,7 @@ namespace Durak.Models
             if (allowPickUpPass)
             {
                 await _hubContext.Clients.Group(id).SendAsync("NotifyClientPickingUp");
-                await _hubContext.Clients.Group(id).SendAsync("StartTimer", 15);
+                await _hubContext.Clients.Group(id).SendAsync("StartTimer", timerDuration);
                 StartTurnTimer(timerDuration);
                 allowPickUpPass = false;
                 return;
