@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+﻿using Durak.Hubs;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Timers;
 
 namespace Durak.Models
 {
@@ -27,15 +31,21 @@ namespace Durak.Models
         public Dictionary<string, List<Card>>? playerHands;
         public GameState state { get; set; }
         public string id { get; set; }
-        
+        private System.Timers.Timer playTimer;
+        public int timerDuration = 15;
+        private IHubContext<DurakHub> _hubContext;
+        private bool callHub = false;
+        public bool notifyNewTurn = true;
+        public bool allowPickUpPass = true;
 
-        public Game(string _id, GameType _gameType, DeckType _deckType)
+        public Game(string _id, GameType _gameType, DeckType _deckType, IHubContext<DurakHub> hubContext)
         {
             _players = new List<Player>();
             state = GameState.Pending;
             id = _id;
             gameType = _gameType;
             deckType = _deckType;
+            _hubContext = hubContext;
         }
         public bool AddPlayer(string id, string name, string userId)
         {
@@ -131,7 +141,10 @@ namespace Durak.Models
                 // check this o,0
                 playerHands[playerId].Remove(playerHands[playerId].Where(c => c.friendlyName == friendlyPlayedName).FirstOrDefault());
                 gamePlayState.cardsInPlay.Add(friendlyPlayedName, null);
+                StartTurnTimer(timerDuration);
+                    
                 return true;
+                
             }
 
             //  This method makes me want to hurl, but it's just temporary.
@@ -145,6 +158,8 @@ namespace Durak.Models
                     {
                         playerHands[playerId].Remove(playerHands[playerId].Where(c => c.friendlyName == friendlyPlayedName).FirstOrDefault());
                         gamePlayState.cardsInPlay.Add(friendlyPlayedName, null);
+                        if (!allowPickUpPass)
+                            StartTurnTimer(timerDuration);
                         return true;
                     }
                         
@@ -175,11 +190,13 @@ namespace Durak.Models
                 gamePlayState.defenderId = nextPlayerID;
                 if (gamePlayState.attackerId == nextPlayerID)
                     gamePlayState.attackerId = playerId;
+
+                StartTurnTimer(timerDuration);
                 return true;
             }
 
             //  Check if defender has made a valid defensive move.
-            if (playerId == gamePlayState.defenderId && !string.IsNullOrEmpty(friendlyCoveredName) && !string.IsNullOrEmpty(friendlyPlayedName))
+            if (playerId == gamePlayState.defenderId && !string.IsNullOrEmpty(friendlyCoveredName) && !string.IsNullOrEmpty(friendlyPlayedName) && allowPickUpPass)
             {
                 Card attackingCard = deck.GetCardFromFriendlyName(friendlyCoveredName);
                 Card defendingCard = deck.GetCardFromFriendlyName(friendlyPlayedName);
@@ -201,6 +218,14 @@ namespace Durak.Models
                 //  The defending card is valid, cover the attacking card.
                 playerHands[playerId].Remove(playerHands[playerId].Where(c => c.friendlyName == friendlyPlayedName).FirstOrDefault());
                 gamePlayState.cardsInPlay[friendlyCoveredName] = friendlyPlayedName;
+
+                if (playerHands[playerId].Count == 0)
+                {
+                    EndAttack();
+                    gamePlayState.checkDurak = true;
+                    return true;
+                }    
+                StartTurnTimer(timerDuration);
                 return true;
             }
 
@@ -209,8 +234,22 @@ namespace Durak.Models
             return false;
         }
 
-        public void PickUp()
+        public async void PickUp()
         {
+            if (allowPickUpPass)
+            {
+                await _hubContext.Clients.Group(id).SendAsync("NotifyClientPickingUp");
+                await _hubContext.Clients.Group(id).SendAsync("StartTimer", timerDuration);
+                StartTurnTimer(timerDuration);
+                allowPickUpPass = false;
+                return;
+            }
+            else
+            {
+                allowPickUpPass = true;
+            }
+
+
             foreach (KeyValuePair<string, string> kvp in gamePlayState.cardsInPlay)
             {
                 playerHands[gamePlayState.defenderId].Add(deck.GetCardFromFriendlyName(kvp.Key));
@@ -255,10 +294,17 @@ namespace Durak.Models
             return true;
         }
 
-        public void UpdateGameState(bool defended)
+        public async void UpdateGameState(bool defended)
         {
-
+            playTimer.Stop();
             SetNextPlayers(gamePlayState.attackerId, gamePlayState.defenderId, defended);
+            notifyNewTurn = true;
+            //  Fuck this is bad, but I actually don't know how else to do it, I will research more into this later.
+            if (callHub)
+            {
+                await _hubContext.Clients.Group(id).SendAsync("TimerEnd");
+                callHub = false;
+            }
         }
 
         private string GetStartingAttacker(Suites nuke)
@@ -333,6 +379,32 @@ namespace Durak.Models
                 gamePlayState.defenderId = gamePlayState.playerOrder[gamePlayState.playerOrder.FindIndex(a => a == gamePlayState.attackerId) + 1];
                 return;
 
+            }
+        }
+
+        private void StartTurnTimer(int timerDuration)
+        {
+            if (playTimer != null)
+            {
+                playTimer.Stop();
+            }
+
+            playTimer = new System.Timers.Timer(timerDuration * 1000);
+            playTimer.AutoReset = false;
+            playTimer.Elapsed += OnPlayTimerElapsed;
+            playTimer.Start();
+        }
+
+        private void OnPlayTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            callHub = true;
+            if (gamePlayState.cardsInPlay.Values.Any(value => value == null))
+            {
+                PickUp();
+            }
+            else
+            {
+                EndAttack();
             }
         }
 
