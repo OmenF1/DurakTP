@@ -141,8 +141,8 @@ namespace Durak.Models
                 // check this o,0
                 playerHands[playerId].Remove(playerHands[playerId].Where(c => c.friendlyName == friendlyPlayedName).FirstOrDefault());
                 gamePlayState.cardsInPlay.Add(friendlyPlayedName, null);
-                if (!allowPickUpPass)
-                    StartTurnTimer(timerDuration);
+                StartTurnTimer(timerDuration);
+                    
                 return true;
                 
             }
@@ -243,6 +243,10 @@ namespace Durak.Models
                 StartTurnTimer(timerDuration);
                 allowPickUpPass = false;
                 return;
+            }
+            else
+            {
+                allowPickUpPass = true;
             }
 
 
@@ -397,7 +401,6 @@ namespace Durak.Models
             if (gamePlayState.cardsInPlay.Values.Any(value => value == null))
             {
                 PickUp();
-                allowPickUpPass = true;
             }
             else
             {
