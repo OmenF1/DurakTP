@@ -32,12 +32,11 @@ namespace Durak.Models
         public GameState state { get; set; }
         public string id { get; set; }
         private System.Timers.Timer playTimer;
-        public const int endTimerDuration = 5;
-        public const int defenderTimerDuration = 15;
+        public const int timerDuration = 15;
         private IHubContext<DurakHub> _hubContext;
         private bool callHub = false;
         public bool notifyNewTurn = true;
-
+        public bool allowPickUpPass = true;
 
         public Game(string _id, GameType _gameType, DeckType _deckType, IHubContext<DurakHub> hubContext)
         {
@@ -142,7 +141,8 @@ namespace Durak.Models
                 // check this o,0
                 playerHands[playerId].Remove(playerHands[playerId].Where(c => c.friendlyName == friendlyPlayedName).FirstOrDefault());
                 gamePlayState.cardsInPlay.Add(friendlyPlayedName, null);
-                StartTurnTimer(defenderTimerDuration);
+                if (!allowPickUpPass)
+                    StartTurnTimer(timerDuration);
                 return true;
                 
             }
@@ -158,7 +158,8 @@ namespace Durak.Models
                     {
                         playerHands[playerId].Remove(playerHands[playerId].Where(c => c.friendlyName == friendlyPlayedName).FirstOrDefault());
                         gamePlayState.cardsInPlay.Add(friendlyPlayedName, null);
-                        StartTurnTimer(defenderTimerDuration);
+                        if (!allowPickUpPass)
+                            StartTurnTimer(timerDuration);
                         return true;
                     }
                         
@@ -189,12 +190,13 @@ namespace Durak.Models
                 gamePlayState.defenderId = nextPlayerID;
                 if (gamePlayState.attackerId == nextPlayerID)
                     gamePlayState.attackerId = playerId;
-                StartTurnTimer(defenderTimerDuration);
+
+                StartTurnTimer(timerDuration);
                 return true;
             }
 
             //  Check if defender has made a valid defensive move.
-            if (playerId == gamePlayState.defenderId && !string.IsNullOrEmpty(friendlyCoveredName) && !string.IsNullOrEmpty(friendlyPlayedName))
+            if (playerId == gamePlayState.defenderId && !string.IsNullOrEmpty(friendlyCoveredName) && !string.IsNullOrEmpty(friendlyPlayedName) && !allowPickUpPass)
             {
                 Card attackingCard = deck.GetCardFromFriendlyName(friendlyCoveredName);
                 Card defendingCard = deck.GetCardFromFriendlyName(friendlyPlayedName);
@@ -216,7 +218,7 @@ namespace Durak.Models
                 //  The defending card is valid, cover the attacking card.
                 playerHands[playerId].Remove(playerHands[playerId].Where(c => c.friendlyName == friendlyPlayedName).FirstOrDefault());
                 gamePlayState.cardsInPlay[friendlyCoveredName] = friendlyPlayedName;
-                StartTurnTimer(defenderTimerDuration);
+                StartTurnTimer(timerDuration);
                 return true;
             }
 
@@ -225,8 +227,18 @@ namespace Durak.Models
             return false;
         }
 
-        public void PickUp()
+        public async void PickUp()
         {
+            if (allowPickUpPass)
+            {
+                await _hubContext.Clients.Group(id).SendAsync("NotifyClientPickingUp");
+                await _hubContext.Clients.Group(id).SendAsync("StartTimer", 15);
+                StartTurnTimer(timerDuration);
+                allowPickUpPass = false;
+                return;
+            }
+
+
             foreach (KeyValuePair<string, string> kvp in gamePlayState.cardsInPlay)
             {
                 playerHands[gamePlayState.defenderId].Add(deck.GetCardFromFriendlyName(kvp.Key));
@@ -378,6 +390,7 @@ namespace Durak.Models
             if (gamePlayState.cardsInPlay.Values.Any(value => value == null))
             {
                 PickUp();
+                allowPickUpPass = true;
             }
             else
             {

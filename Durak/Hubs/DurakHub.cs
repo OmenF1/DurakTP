@@ -183,6 +183,8 @@ namespace Durak.Hubs
             {
                 var _player = game._players.FirstOrDefault(p => p.Name == Context.User.Identity.Name);
                 await SendToSinglePlayer(_player, "RemoveCardFromHand", cardFriendlyName);
+                if (game.allowPickUpPass)
+                    await Clients.Group(groupId).SendAsync("StartTimer", 15);
                 await NotifyGameStateChanged(groupId);
             }
             

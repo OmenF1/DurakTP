@@ -164,6 +164,10 @@ connection.on("StartTimer", function (duration) {
     startTimer(duration);
 })
 
+connection.on("NotifyClientPickingUp", function () {
+    showMessage("Defender is picking up.", 3000)
+})
+
 //  ----------------- SignalR Messaging end - ----------------//
 
 //  ----------------- Game Functions Start -------------------//
@@ -364,9 +368,7 @@ function startTimer(duration) {
     clearInterval(intervalId);
     intervalId = setInterval(function () {
         seconds = parseInt(timer % 60, 10);
-
         timerLocation.textContent = seconds;
-
         if (--timer < 0) {
             clearInterval(intervalId);
         }
