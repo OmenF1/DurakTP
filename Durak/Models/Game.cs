@@ -11,6 +11,8 @@ using System.Timers;
 
 namespace Durak.Models
 {
+
+    // I really want to rewrite this whole thing, but for now this will do.
     public class Game
     {
         public const int cardsNeeded = 6;
@@ -147,6 +149,7 @@ namespace Durak.Models
                 
             }
 
+            //  prevent a defender from being attacked with more cards than what is in their hand.
             if (playerId != gamePlayState.defenderId && playerHands[gamePlayState.defenderId].Count == gamePlayState.cardsInPlay.Count(kvp => kvp.Value == null) && allowPickUpPass)
                 return false;
 
@@ -237,6 +240,7 @@ namespace Durak.Models
             return false;
         }
 
+        //  Defender is picking up or conceding the round.
         public async void PickUp()
         {
             if (allowPickUpPass)
@@ -274,6 +278,7 @@ namespace Durak.Models
             UpdateGameState(false);
         }
 
+        //  Defender has successfully defended the attack.
         public bool EndAttack()
         {
             foreach (KeyValuePair<string, string> kvp in gamePlayState.cardsInPlay)
@@ -297,6 +302,7 @@ namespace Durak.Models
             return true;
         }
 
+        //  This is really just another way of saying the round is over, set up the next round.  Bad naming?
         public async void UpdateGameState(bool defended)
         {
             playTimer.Stop();
@@ -310,6 +316,8 @@ namespace Durak.Models
             }
         }
 
+        //  Find the player who will start the game.
+        //  This is the player who has the lowest nuke.
         private string GetStartingAttacker(Suites nuke)
         {
             string startingPlayer = "";
@@ -331,6 +339,8 @@ namespace Durak.Models
             return startingPlayer;
         }
 
+        //  This is the person to the attackers left.
+        //  In this implimentation this is just attackerIndex  + 1
         private string GetStartingDefender(string attackerId, List<string> players)
         {
             int index = players.FindIndex(a => a == attackerId);
@@ -385,6 +395,7 @@ namespace Durak.Models
             }
         }
 
+        //  Timer for the round so that the game doesn't just stall if somebody is not playing.
         private void StartTurnTimer(int timerDuration)
         {
             if (playTimer != null)
@@ -398,6 +409,7 @@ namespace Durak.Models
             playTimer.Start();
         }
 
+        //  The specified time for the round / event has elapsed.
         private void OnPlayTimerElapsed(object sender, ElapsedEventArgs e)
         {
             callHub = true;
