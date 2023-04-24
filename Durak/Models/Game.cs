@@ -147,8 +147,11 @@ namespace Durak.Models
                 
             }
 
+            if (playerId != gamePlayState.defenderId && playerHands[gamePlayState.defenderId].Count == gamePlayState.cardsInPlay.Count(kvp => kvp.Value == null) && allowPickUpPass)
+                return false;
+
             //  This method makes me want to hurl, but it's just temporary.
-            if (playerId != gamePlayState.defenderId )
+            if (playerId != gamePlayState.defenderId)
             {
                 var cardVal = friendlyPlayedName.Split("_")[0];
 
