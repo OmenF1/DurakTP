@@ -32,7 +32,8 @@ namespace Durak.Models
         public GameState state { get; set; }
         public string id { get; set; }
         private System.Timers.Timer playTimer;
-        public int timerDuration = 15;
+        public int timerDuration = 30;
+        public int pickUpDuration = 10;
         private IHubContext<DurakHub> _hubContext;
         private bool callHub = false;
         public bool notifyNewTurn = true;
@@ -242,8 +243,8 @@ namespace Durak.Models
             if (allowPickUpPass)
             {
                 await _hubContext.Clients.Group(id).SendAsync("NotifyClientPickingUp");
-                await _hubContext.Clients.Group(id).SendAsync("StartTimer", timerDuration);
-                StartTurnTimer(timerDuration);
+                await _hubContext.Clients.Group(id).SendAsync("StartTimer", pickUpDuration);
+                StartTurnTimer(pickUpDuration);
                 allowPickUpPass = false;
                 return;
             }
