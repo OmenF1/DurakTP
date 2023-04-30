@@ -157,12 +157,16 @@ namespace Durak.Hubs
 
         private async Task RefreshPlayerHands(string groupId)
         {
+            var game = games.FirstOrDefault(i => i.id == groupId);
             //  This who section of creating the list of cards and sending it in this way is only temp
             //  I seem to be having a javascript issue with the received JSON result, so I'm using this for the time being.
-            foreach (KeyValuePair<string, List<Card>> player in games.FirstOrDefault(i => i.id == groupId).playerHands)
+            foreach (KeyValuePair<string, List<Card>> player in game.playerHands)
             {
-                var _player = games.FirstOrDefault(i => i.id == groupId)._players.FirstOrDefault(p => p.Name == player.Key);
-                await SendToSinglePlayer(_player, receiveCards, System.Text.Json.JsonSerializer.Serialize(games.FirstOrDefault(i => i.id == groupId).playerHands[player.Key].OrderByDescending(x => x.value).Select(x => x.friendlyName).ToList()));
+                var _player = game._players.FirstOrDefault(p => p.Name == player.Key);
+                await SendToSinglePlayer(_player, receiveCards, System.Text.Json.JsonSerializer.Serialize(game.playerHands[player.Key].Where(card => card.suite == game.nuke.suite)
+                                                                                                                                             .Concat(game.playerHands[player.Key].Where(card => card.suite != game.nuke.suite)
+                                                                                                                                                          .OrderBy(card => card.value))
+                                                                                                                                             .ToList().Select(c => c.friendlyName).ToList()));
             }
             games.FirstOrDefault(i => i.id == groupId).refreshPlayerCards = false;
         }
@@ -243,21 +247,25 @@ namespace Durak.Hubs
 
         private async Task HandlePageRefresh(Player player, string groupId)
         {
+            var gameInstance = games.FirstOrDefault(i => i.id == groupId);
             await SendToSinglePlayer(player, startGame);
-            await SendToSinglePlayer(player, receiveGamePlayState, System.Text.Json.JsonSerializer.Serialize(games.FirstOrDefault(i => i.id == groupId).gamePlayState));
-            await SendToSinglePlayer(player, receiveCards, System.Text.Json.JsonSerializer.Serialize(games.FirstOrDefault(i => i.id == groupId).playerHands[player.Name].Select(x => x.friendlyName).ToList()));
-            if (games.FirstOrDefault(i => i.id == groupId).gameType == GameType.TPEdition)
+            await SendToSinglePlayer(player, receiveGamePlayState, System.Text.Json.JsonSerializer.Serialize(gameInstance.gamePlayState));
+            await SendToSinglePlayer(player, receiveCards, System.Text.Json.JsonSerializer.Serialize(gameInstance.playerHands[player.Name].Where(card => card.suite == gameInstance.nuke.suite)
+                                                                                                                                             .Concat(gameInstance.playerHands[player.Name].Where(card => card.suite != gameInstance.nuke.suite)
+                                                                                                                                                          .OrderBy(card => card.value))
+                                                                                                                                             .ToList().Select(c => c.friendlyName).ToList()));
+            if (gameInstance.gameType == GameType.TPEdition)
                 await SendToSinglePlayer(player, enableBombMode);
             
-            if (games.FirstOrDefault(i => i.id == groupId).gamePlayState.defenderId == player.Name)
+            if (gameInstance.gamePlayState.defenderId == player.Name)
             {
                 await SendToSinglePlayer(player, enableDefenseMode);
             }
-            else if (games.FirstOrDefault(i => i.id == groupId).gamePlayState.attackerId == player.Name)
+            else if (gameInstance.gamePlayState.attackerId == player.Name)
             {
                 await SendToSinglePlayer(player, enableAttackMode);
             }
-            await Clients.Group(groupId).SendAsync(receivePlayerSeating, System.Text.Json.JsonSerializer.Serialize(games.FirstOrDefault(i => i.id == groupId).gamePlayState.tableOrder));
+            await Clients.Group(groupId).SendAsync(receivePlayerSeating, System.Text.Json.JsonSerializer.Serialize(gameInstance.gamePlayState.tableOrder));
 
         }
 

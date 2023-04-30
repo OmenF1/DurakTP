@@ -204,6 +204,9 @@ function UpdatePlayerHand(cards) {
         img.draggable = true;
         img.id = cards[i];
         img.addEventListener('dragstart', HandleDragStart);
+        img.addEventListener("touchstart", handleTouchStart);
+        img.addEventListener("touchmove", handleTouchMove);
+        img.addEventListener("touchend", handleTouchEnd);
         link.appendChild(img);
         playerCardsLocation.appendChild(link);
     }
@@ -230,8 +233,30 @@ function HandleDragDrop(ev) {
         });
         event.preventDefault();
     }
-    
 }
+
+var draggedId;
+function handleTouchStart(ev) {
+    ev.stopPropagation();
+    var touch = ev.targetTouches[0];
+    draggedId = touch.target.id;
+}
+
+function handleTouchMove(ev) {
+    ev.stopPropagation();
+    ev.preventDefault();
+}
+
+function handleTouchEnd(ev) {
+    ev.stopPropagation();
+    var touch = ev.changedTouches[0];
+    var target = document.elementFromPoint(touch.clientX, touch.clientY);
+    connection.invoke("CardPlayed", draggedId, groupId, target.id).catch(function (err) {
+        return console.error(err.toString());
+    });
+}
+
+
 /* I know there's duplicate code, here I'll clean up later. */
 function UpdateBoardAndGameState(data) {
     var exists = document.getElementById("nuke-img");
