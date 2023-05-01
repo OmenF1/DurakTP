@@ -4,19 +4,19 @@
 
 }
 
-<div class="container" style="border: 1px solid black;">
+<div class="container border-1px-solid container-main">
     <div class="col-6">
         <input type="button" value="Start" id="startGame" class="btn btn-success" />
         <input type="button" value="Leave Game" id="btn-leave" class="btn btn-danger" />
         <input type="button" value="Pick Up" class="btn btn-primary" id="PickUp" disabled />
-        <input type="button" value="Done Attacking." class="btn btn-primary" id="FinishAttacking" disabled />
+        <div id="timer"></div>
     </div>
 
     <div class="row">
-        <div class="col-12" style="border: 1px solid black;" id="startWindow">
+        <div class="col-12 border-1px-solid" id="startWindow">
             <div class="row"></div>
         </div>
-        <div class="col-12" style="border: 1px solid black;">
+        <div class="col-12 border-1px-solid">
             <div class="row">
                 <div class="col-4 player-seat" id="seat1">Seat 1</div>
                 <div class="col-4 player-seat" id="seat2">Seat 2</div>
@@ -24,7 +24,7 @@
             </div>
             <div class="row">
                 <div class="col-1 player-seat" id="seat8">Seat 8</div>
-                <div class="col-8" style="border: 1px solid black; height: 500px;">
+                <div class="col-8 border-1px-solid table-playing-area">
                     <div class="col-9 table-container" id="playingTable">
                         <div class="col-9 cards-drop-area" ondrop="HandleDragDrop(event)" ondragover="allowDrop(event)">
                             <div class="row col-12" id="cardsInPlayArea">
@@ -35,7 +35,7 @@
                 <div class="col-1 player-seat" id="seat4">Seat 4</div>
                 <div class="col-2">
                     <!-- Chat window-->
-                    <div class="chat-window" style="border: 1px solid black; margin-top:5px;">
+                    <div class="chat-window border-1px-solid margin-top-5">
 
                         <div class="chat-log">
                             <ul id="chatView">
@@ -48,12 +48,12 @@
                         </div>
                     </div>
                     <div id="deckArea" class="row">
-                        <div class="col-6" id="nuke-holder">
+                        <div class="col-3" id="nuke-holder">
                         </div>
-                        <div class="col-6 card-count" id="card-count-container">    
+                        <div class="col-3 card-count" id="card-count-container">    
                         </div>
                     </div>
-                    <div id="timer"></div>
+                    
                 </div>
             </div>
             <div class="row">

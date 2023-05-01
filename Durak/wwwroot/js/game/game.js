@@ -44,12 +44,12 @@ document.getElementById("PickUp").addEventListener("click", function (event) {
 
 //  Done attacking button
 
-document.getElementById("FinishAttacking").addEventListener("click", function (event) {
-    connection.invoke("FinishAttack", groupId).catch(function (err) {
-        return console.error(err.toString());
-    });
-    event.preventDefault();
-});
+//document.getElementById("FinishAttacking").addEventListener("click", function (event) {
+//    connection.invoke("FinishAttack", groupId).catch(function (err) {
+//        return console.error(err.toString());
+//    });
+//    event.preventDefault();
+//});
 
 document.getElementById("btn-leave").addEventListener("click", function (event) {
     connection.invoke("LeaveGroup", groupId).catch(function (err) {
