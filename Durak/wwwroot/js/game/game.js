@@ -403,3 +403,12 @@ function startTimer(duration) {
         }
     }, 1000);
 }
+
+function toggleChatWindow() {
+    let chatWindow = document.getElementById("chat-window");
+    if (chatWindow.style.display != "none") {
+        chatWindow.style.display = "none";
+    } else {
+        chatWindow.style.display = "block";
+    }
+}

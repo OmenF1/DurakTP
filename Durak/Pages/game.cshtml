@@ -4,10 +4,11 @@
 
 }
 <div class="buttons-box">
-    <input type="button" value="Start" id="startGame" class="btn btn-success" />
-    <input type="button" value="Leave Game" id="btn-leave" class="btn btn-danger" />
-    <input type="button" value="Pick Up" class="btn btn-primary" id="PickUp" disabled />
-    <input type="button" value="Done Attacking." class="btn btn-primary" id="FinishAttacking" disabled />
+    <input type="button" value="Start" id="startGame" class="btn btn-success btn-game" />
+    <input type="button" value="Leave Game" id="btn-leave" class="btn btn-danger btn-game" />
+    <input type="button" value="Pick Up" class="btn btn-primary btn-game" id="PickUp" disabled />
+    <input type="button" value="Done Attacking." class="btn btn-primary btn-game" id="FinishAttacking" disabled />
+    <input type="button" value="Chat" id="chatWindowButton" class="btn btn-secondary btn-game" onclick="toggleChatWindow()" />
 </div>
 <div class="main-container">
     <div class="player-seat-1 player-seat-base"><div class="player-icon" id="seat1">seat 1</div></div>
@@ -36,23 +37,19 @@
     </div>
 </div>
 
-<div class="col-2" style="display: none;">
-    <!-- Chat window-->
-    <div class="chat-window" style="border: 1px solid black; margin-top:5px;">
+<!-- Chat window-->
+<div class="chat-window"  id="chat-window">
 
-        <div class="chat-log">
-            <ul id="chatView">
-            </ul>
-        </div>
-        <div class="row p-1 chat-message">
-            <div class="mb-3"><input type="text" id="message" placeholder="type a message.." class="form-control" /></div>
-        </div>
-        <div class="row p-1">
-        </div>
+    <div class="chat-log">
+        <ul id="chatView">
+        </ul>
+    </div>
+    <div class="row p-1 chat-message">
+        <div class="mb-3"><input type="text" id="message" placeholder="type a message.." class="form-control" /></div>
+    </div>
+    <div class="row p-1">
     </div>
 </div>
-
-
 
 <!--    Notification MessageBox     -->
 <div id="message-box" class="message-box bg-dark text-light">
