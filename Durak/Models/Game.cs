@@ -127,8 +127,11 @@ namespace Durak.Models
             {
                 if (gamePlayState.cardsInPlay.ContainsKey(friendlyCoveredName))
                     if (gamePlayState.cardsInPlay[friendlyCoveredName] != null)
+                    {
                         _logger.LogInformation($"{DateTime.Now} - game id: {id} - {playerId} tried to cover a card that was already covered");
                         return false;
+                    }
+
             }
 
             //  This will change at a later stage to also account for TP edition where "bombing" is allowed.
