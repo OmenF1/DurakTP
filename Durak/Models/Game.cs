@@ -37,6 +37,7 @@ namespace Durak.Models
         public int timerDuration = 30;
         public int pickUpDuration = 10;
         private IHubContext<DurakHub> _hubContext;
+        private ILogger<Game> _logger;
         private bool callHub = false;
         public bool notifyNewTurn = true;
         public bool allowPickUpPass = true;
@@ -49,6 +50,7 @@ namespace Durak.Models
             gameType = _gameType;
             deckType = _deckType;
             _hubContext = hubContext;
+            _logger = LoggerFactory.Create(options => { }).CreateLogger<Game>();
         }
         public bool AddPlayer(string id, string name, string userId)
         {
@@ -60,6 +62,7 @@ namespace Durak.Models
             else
             {
                 _players.Add(new Player(name, id, userId));
+                _logger.LogInformation($"{DateTime.Now} - game id: {id} - added player {name}");
                 return true;
             }
         }
@@ -70,6 +73,7 @@ namespace Durak.Models
             {
                 var player = _players.FirstOrDefault(i => i.Name == name);
                 _players.Remove(player);
+                _logger.LogInformation($"{DateTime.Now} - game id: {id} - removed player {name}");
                 return player.Connections;
             }
             return null;
@@ -117,11 +121,13 @@ namespace Durak.Models
 
         public bool CardPlayed(string playerId, string friendlyPlayedName, string? friendlyCoveredName = null)
         {
+            
             //  This just stops players from trying to cover the same card more than once.
             if (!string.IsNullOrEmpty(friendlyCoveredName))
             {
                 if (gamePlayState.cardsInPlay.ContainsKey(friendlyCoveredName))
                     if (gamePlayState.cardsInPlay[friendlyCoveredName] != null)
+                        _logger.LogInformation($"{DateTime.Now} - game id: {id} - {playerId} tried to cover a card that was already covered");
                         return false;
             }
 
@@ -131,7 +137,11 @@ namespace Durak.Models
 
             //  Defender can't play a defensive card before a card has even been played.
             if (playerId == gamePlayState.defenderId && gamePlayState.cardsInPlay.Count == 0)
+            {
+                _logger.LogInformation($"{DateTime.Now} - game id: {id} - {playerId} tried to defend without any cards been attacked");
                 return false;
+            }
+            
 
             //  This will stop a player from getting attacked further even though they're out of cards.
             //  It doesn't fully solve the problem though, but I can't impliment this logic properly until I've got timers.
@@ -145,7 +155,7 @@ namespace Durak.Models
                 playerHands[playerId].Remove(playerHands[playerId].Where(c => c.friendlyName == friendlyPlayedName).FirstOrDefault());
                 gamePlayState.cardsInPlay.Add(friendlyPlayedName, null);
                 StartTurnTimer(timerDuration);
-                    
+                _logger.LogInformation($"{DateTime.Now} - game id: {id} - {playerId} opened the attack with {friendlyCoveredName}");
                 return true;
                 
             }
@@ -207,20 +217,30 @@ namespace Durak.Models
             {
                 Card attackingCard = deck.GetCardFromFriendlyName(friendlyCoveredName);
                 Card defendingCard = deck.GetCardFromFriendlyName(friendlyPlayedName);
+                _logger.LogInformation($"{DateTime.Now} - {playerId} tried to defend {friendlyCoveredName} with {friendlyPlayedName}");
 
                 //  The card suites must be the same, however if it's the defending card is a nuke, then it may cover any other suite.
                 if ((attackingCard.suite != defendingCard.suite) && (defendingCard.suite != nuke.suite))
-                    return false;
+                {
+                    _logger.LogInformation($"{DateTime.Now} - game id: {id} - {playerId} defense declined because suites did not match.");
+                    return false; 
+                }
 
                 if (attackingCard.suite == nuke.suite)
                 {
                     //  If the attacking card is a nuke then the defending card must be higher as per normal.
                     if (attackingCard.value > defendingCard.value)
+                    {
+                        _logger.LogInformation($"{DateTime.Now} - game id: {id} - {playerId} defense declined because attacking card is nuke and defending card is lower value");
                         return false;
+                    }
                 }
 
                 if (attackingCard.value > defendingCard.value && defendingCard.suite != nuke.suite)
+                {
+                    _logger.LogInformation($"{DateTime.Now} - game id: {id} - {playerId} defending card not valid");
                     return false;
+                }
 
                 //  The defending card is valid, cover the attacking card.
                 playerHands[playerId].Remove(playerHands[playerId].Where(c => c.friendlyName == friendlyPlayedName).FirstOrDefault());
@@ -231,13 +251,15 @@ namespace Durak.Models
                     EndAttack();
                     gamePlayState.checkDurak = true;
                     return true;
-                }    
+                }
+                _logger.LogInformation($"{DateTime.Now} - game id: {id} - {playerId} defense allowed.");
                 StartTurnTimer(timerDuration);
                 return true;
+
             }
 
 
-
+            _logger.LogInformation($"{DateTime.Now} - game id: {id} - {playerId} card played {friendlyPlayedName} went into catchall return false");
             return false;
         }
 
@@ -249,12 +271,14 @@ namespace Durak.Models
                 await _hubContext.Clients.Group(id).SendAsync("NotifyClientPickingUp");
                 await _hubContext.Clients.Group(id).SendAsync("StartTimer", pickUpDuration);
                 StartTurnTimer(pickUpDuration);
+                _logger.LogInformation($"{DateTime.Now} - game id: {id} - defender picking up");
                 allowPickUpPass = false;
                 return;
             }
             else
             {
                 allowPickUpPass = true;
+                _logger.LogInformation($"{DateTime.Now} - game id: {id} - defender picked up");
             }
 
 
@@ -403,7 +427,7 @@ namespace Durak.Models
             {
                 playTimer.Stop();
             }
-
+            _logger.LogInformation($"{DateTime.Now} - game id: {id} - turn timer started.");
             playTimer = new System.Timers.Timer(timerDuration * 1000);
             playTimer.AutoReset = false;
             playTimer.Elapsed += OnPlayTimerElapsed;
@@ -416,10 +440,13 @@ namespace Durak.Models
             callHub = true;
             if (gamePlayState.cardsInPlay.Values.Any(value => value == null))
             {
+                _logger.LogInformation($"{DateTime.Now} - game id: {id} - timer elapsed calling pickup");
                 PickUp();
+
             }
             else
             {
+                _logger.LogInformation($"{DateTime.Now} - game id: {id} - timer elapsed calling end attack");
                 EndAttack();
             }
         }
