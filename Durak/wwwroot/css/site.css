@@ -2,22 +2,55 @@ html {
   font-size: 14px;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
 html {
   position: relative;
   min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background: #63d471;
+    color: black;
 }
 
 /******************** Game Page Items ************************/
+
+/******************** General Layout *************************/
+
+.table-container {
+    height: 100%;
+    border: 1px solid black;
+    display: none;
+    width: 100%;
+}
+
+.cards-drop-area {
+    border: 1px solid black;
+    border-radius: 40px;
+    padding-bottom: 5px;
+    height: 100%;
+    width: 100%;
+    background: url("../images/tableSurface.jpg") 100% 100%;
+    
+}
+
+
+.player-attacker {
+    box-shadow: 0px 0px 5px 3px cyan;
+}
+
+.player-defender {
+    
+    box-shadow: 0px 0px 5px 3px red;
+}
+
+#deckArea {
+    padding: 5px;
+    height: 80px;
+    width: 100%;
+}
+
+/******************** Chat box Layout *************************/
 .chat-log ul {
     padding-left: 0;
     list-style: none;
@@ -33,105 +66,230 @@ body {
     height: 80%;
 }
 
-#deckArea {
-    padding: 5px;
-    height: 100px;
-    width: 100%;
-}
-
-#deckArea img {
-    max-height: 80px;
-    min-height: 80px;
-}
-
-.table-container {
-height:100%;
-    border: 1px solid black;
-    display: none;
-    width: 100%;
-}
-
-.cards-drop-area {
-    border: 1px solid black;
-    padding-bottom: 5px;
-    height: 100%;
-    width: 100%;
-    background: url("../images/tableSurface.jpg") 100% 100%;
-    background-size: cover;
-}
-
-.base-seat {
-    background: white;
-    border: 1px solid black;
-}
-
-.player-seat {
-    background: #d5f2f2;
-    border: 1px solid black;
-}
-
-.player-attacker {
-    background: #93edce;
-    border: 1px solid green;
-}
-
-.player-defender {
-    background: #f27272;
-    border: 1px solid red;
-}
-
-.player-cards {
-
-    width: 100%;
-    height: 120px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    white-space: nowrap;
-}
-
-.card-img {
-    max-height: 80px;
-    min-height: 80px;
-}
-
-.player-cards img {
-    max-height: 80px;
-    min-height: 80px;
-}
-
-.row img {
-    max-height: 80px;
-    min-height: 80px;
-}
-
-.card-count {
-    height: 80px;
-    width: 55px;
-    border: 1px solid black;
-    background-color: #d5f2f2;
-    border-radius: 3px;
-}
-
-
 #message-box {
     position: fixed;
     top: 0;
     left: 50%;
     transform: translate(-50%, -100%);
-    background-color: #fff;
     border: 1px solid #000;
     padding: 10px;
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
+    
 }
 
-    #message-box.show {
-        opacity: 1;
-        transform: translate(-50%, 0);
-    }
+#message-box.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
 
 #message-text {
     margin: 0;
     font-size: 16px;
     text-align: center;
+}
+
+/******************** Cards Styling & Layout ******************/
+
+.card-count {
+    height: 50px;
+    width: 30px;
+    border: 1px solid black;
+    background-color: #d5f2f2;
+    border-radius: 3px;
+}
+
+#nuke-holder {
+    height: 50px;
+}
+
+#deckArea img {
+    max-height: 50px;
+    min-height: 50px;
+}
+
+
+.card-img {
+    max-height: 50px;
+    min-height: 50px;
+}
+
+.player-cards img {
+    max-height: 60px;
+    min-height: 50px;
+}
+
+.row img {
+    max-height: 60px;
+    min-height: 60px;
+}
+
+/******************** Generic Layout Items *************************/
+
+.margin-top-5 {
+    margin-top: 5px;
+}
+
+.border-1px-solid {
+    border: 1px solid black;
+}
+
+/*  Brining in grid. */
+
+.buttons-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    padding-bottom: 5px;
+}
+
+.btn-game {
+    width: 80%;
+    font-optical-sizing: auto;
+    font-size:small; 
+}
+
+.chat-window {
+    display: none;
+    border: 1px solid black;
+    margin-top: 5px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 60%;
+    background: white;
+}
+
+.main-container {
+    display: grid;
+    grid-template-columns: 1fr 7fr 1fr;
+    text-align: center;
+}
+
+.player-seat-1 {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.player-seat-2 {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.player-seat-3 {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.player-seat-4 {
+    grid-column: 3;
+    grid-row: 2;
+    display: grid;
+    align-items: center;
+}
+
+.player-seat-5 {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+.player-seat-6 {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.player-seat-7 {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.player-seat-8 {
+    grid-column: 1;
+    grid-row: 2;
+    display: grid;
+    align-items: center;
+}
+
+.player-icon {
+    border-radius: 30px;
+    border: 1px solid black;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    background-color: #63A46C;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.playing-table {
+    grid-column: 2;
+    column-width: 3/4;
+    grid-row: 2;
+    height: 50vh;
+    background-color: #6a7152;
+    border: 1px solid black;
+    border-radius: 50px;
+}
+
+.cards-area {
+    display: grid;
+    grid-template-columns: 7fr 1fr;
+    border: 1px solid black;
+}
+
+.card-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.player-cards {
+    height: 80px;
+    grid-column: 1;
+    column-width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    border-right: 1px solid black;
+    
+}
+
+.player-cards div {
+    border: 1px solid black;
+}
+
+/*  new grid end. */
+/*  I didn't want to go here since I was planning on building this into a mobile app and therefor designed for desktop first but here we are...
+    That being said, I'm still going mobile.
+
+
+********************* View Ports ***********************************/
+@media (max-width: 575.98px) {
+    
+}
+
+
+@media (max-width: 767.98px) {
+    
+}
+
+
+@media (max-width: 991.98px) {
+
+}
+
+
+@media (max-width: 1199.98px) {
+
+}
+
+
+@media (max-width: 1399.98px) {
+
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
 }
