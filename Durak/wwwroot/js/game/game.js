@@ -168,6 +168,10 @@ connection.on("NotifyClientPickingUp", function () {
     showMessage("Defender is picking up.", 3000)
 })
 
+connection.on("PopupDurak", function (durak) {
+    showMessage(`${durak} is the Durak!`, 3000);
+})
+
 //  ----------------- SignalR Messaging end - ----------------//
 
 //  ----------------- Game Functions Start -------------------//
