@@ -44,12 +44,12 @@ document.getElementById("PickUp").addEventListener("click", function (event) {
 
 //  Done attacking button
 
-document.getElementById("FinishAttacking").addEventListener("click", function (event) {
-    connection.invoke("FinishAttack", groupId).catch(function (err) {
-        return console.error(err.toString());
-    });
-    event.preventDefault();
-});
+//document.getElementById("FinishAttacking").addEventListener("click", function (event) {
+//    connection.invoke("FinishAttack", groupId).catch(function (err) {
+//        return console.error(err.toString());
+//    });
+//    event.preventDefault();
+//});
 
 document.getElementById("btn-leave").addEventListener("click", function (event) {
     connection.invoke("LeaveGroup", groupId).catch(function (err) {
@@ -166,6 +166,10 @@ connection.on("StartTimer", function (duration) {
 
 connection.on("NotifyClientPickingUp", function () {
     showMessage("Defender is picking up.", 3000)
+})
+
+connection.on("PopupDurak", function (durak) {
+    showMessage(`${durak} is the Durak!`, 3000);
 })
 
 //  ----------------- SignalR Messaging end - ----------------//
@@ -307,7 +311,7 @@ function SetPlayerPositions(players) {
             x.classList.add("base-player");
         }
         else {
-            x.textContent = "Empty Seat";
+            x.textContent = "Open";
             x.removeAttribute("id");
             x.classList.remove("base-player");
             x.classList.add("base-seat");
@@ -316,7 +320,7 @@ function SetPlayerPositions(players) {
 }
 
 function UpdateDefenderAttacker(defender, attacker) {
-    let seats = document.getElementsByClassName("player-seat")
+    let seats = document.getElementsByClassName("player-icon")
 
     for (let i = 0; i < seats.length; i++) {
         if (seats[i].id == defender) {
@@ -398,4 +402,13 @@ function startTimer(duration) {
             clearInterval(intervalId);
         }
     }, 1000);
+}
+
+function toggleChatWindow() {
+    let chatWindow = document.getElementById("chat-window");
+    if (chatWindow.style.display != "none") {
+        chatWindow.style.display = "none";
+    } else {
+        chatWindow.style.display = "block";
+    }
 }

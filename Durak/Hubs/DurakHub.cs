@@ -22,6 +22,7 @@ namespace Durak.Hubs
         private const string receivePlayerSeating = "ReceivePlayerSeating";
         private const string notifyAttacking = "NotifyAttacking";
         private const string notifyDefending = "NotifyDefending";
+        private const string popupDurak = "PopupDurak";
 
         private static List<Game> games = new List<Game>();
 
@@ -127,6 +128,7 @@ namespace Durak.Hubs
                 {
                     var durak = game.playerHands.Where(i => i.Value.Count > 0).FirstOrDefault().Key;
                     await Clients.Group(groupId).SendAsync(receiveMessage, serverSend, $"{durak} Is The Durak!");
+                    await Clients.Group(groupId).SendAsync(popupDurak, durak);
                     games.FirstOrDefault(i => i.id == groupId).state = GameState.Pending;
                     await Clients.Group(groupId).SendAsync(endGame);
                 }
