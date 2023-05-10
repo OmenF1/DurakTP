@@ -126,11 +126,13 @@ namespace Durak.Models
             if (!string.IsNullOrEmpty(friendlyCoveredName))
             {
                 if (gamePlayState.cardsInPlay.ContainsKey(friendlyCoveredName))
+                {
                     if (gamePlayState.cardsInPlay[friendlyCoveredName] != null)
                     {
                         _logger.LogInformation($"{DateTime.Now} - game id: {id} - {playerId} tried to cover a card that was already covered");
                         return false;
                     }
+                }
 
             }
 
