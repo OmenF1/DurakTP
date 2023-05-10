@@ -50,7 +50,7 @@ namespace Durak.Models
             gameType = _gameType;
             deckType = _deckType;
             _hubContext = hubContext;
-            _logger = LoggerFactory.Create(options => { }).CreateLogger<Game>();
+            _logger = LoggerFactory.Create(options => { options.AddAzureWebAppDiagnostics(); }).CreateLogger<Game>();
         }
         public bool AddPlayer(string id, string name, string userId)
         {
