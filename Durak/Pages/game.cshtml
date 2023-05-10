@@ -3,7 +3,7 @@
 @{
 
 }
-<div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr">
+<div class="buttons-box">
     <input type="button" value="Start" id="startGame" class="btn btn-success" />
     <input type="button" value="Leave Game" id="btn-leave" class="btn btn-danger" />
     <input type="button" value="Pick Up" class="btn btn-primary" id="PickUp" disabled />
@@ -26,7 +26,7 @@
         </div>
     </div>
 </div>
-
+<!--    Player hand area as well as area showing the nuke, cards remaining and the timer.-->
 <div class="cards-area">
     <div class="player-cards" id="playerCards"></div>
     <div class="card-info" id="deckArea">
@@ -55,7 +55,7 @@
 
 
 <!--    Notification MessageBox     -->
-<div id="message-box">
+<div id="message-box" class="message-box bg-dark text-light">
     <p id="message-text"></p>
 </div>
 

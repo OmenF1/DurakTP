@@ -320,7 +320,7 @@ function SetPlayerPositions(players) {
 }
 
 function UpdateDefenderAttacker(defender, attacker) {
-    let seats = document.getElementsByClassName("player-seat")
+    let seats = document.getElementsByClassName("player-icon")
 
     for (let i = 0; i < seats.length; i++) {
         if (seats[i].id == defender) {
