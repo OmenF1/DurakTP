@@ -307,7 +307,7 @@ function SetPlayerPositions(players) {
             x.classList.add("base-player");
         }
         else {
-            x.textContent = "Empty Seat";
+            x.textContent = "Open";
             x.removeAttribute("id");
             x.classList.remove("base-player");
             x.classList.add("base-seat");

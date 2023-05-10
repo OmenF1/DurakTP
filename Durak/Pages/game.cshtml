@@ -3,72 +3,58 @@
 @{
 
 }
-
-<div class="container border-1px-solid container-main">
-    <div class="col-6">
-        <input type="button" value="Start" id="startGame" class="btn btn-success" />
-        <input type="button" value="Leave Game" id="btn-leave" class="btn btn-danger" />
-        <input type="button" value="Pick Up" class="btn btn-primary" id="PickUp" disabled />
-        <div id="timer"></div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 border-1px-solid" id="startWindow">
-            <div class="row"></div>
-        </div>
-        <div class="col-12 border-1px-solid">
-            <div class="row">
-                <div class="col-4 player-seat" id="seat1">Seat 1</div>
-                <div class="col-4 player-seat" id="seat2">Seat 2</div>
-                <div class="col-4 player-seat" id="seat3">Seat 3</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr">
+    <input type="button" value="Start" id="startGame" class="btn btn-success" />
+    <input type="button" value="Leave Game" id="btn-leave" class="btn btn-danger" />
+    <input type="button" value="Pick Up" class="btn btn-primary" id="PickUp" disabled />
+    <input type="button" value="Done Attacking." class="btn btn-primary" id="FinishAttacking" disabled />
+</div>
+<div class="main-container">
+    <div class="player-seat-1 player-seat-base"><div class="player-icon" id="seat1">seat 1</div></div>
+    <div class="player-seat-2 player-seat-base"><div class="player-icon" id="seat2">seat 2</div></div>
+    <div class="player-seat-3 player-seat-base"><div class="player-icon" id="seat3">seat 3</div></div>
+    <div class="player-seat-4 player-seat-base"><div class="player-icon" id="seat4">seat 4</div></div>
+    <div class="player-seat-5 player-seat-base"><div class="player-icon" id="seat5">seat 5</div></div>
+    <div class="player-seat-6 player-seat-base"><div class="player-icon" id="seat6">seat 6</div></div>
+    <div class="player-seat-7 player-seat-base"><div class="player-icon" id="seat7">seat 7</div></div>
+    <div class="player-seat-8 player-seat-base"><div class="player-icon" id="seat8">seat 8</div></div>
+    <!-- Playing Table, I'm going to keep the inner table a normal bootstrap grid for now.-->
+    <div class="playing-table" id="playingTable">
+        <div class="col-9 cards-drop-area" ondrop="HandleDragDrop(event)" ondragover="allowDrop(event)">
+            <div class="row col-12" id="cardsInPlayArea">
             </div>
-            <div class="row">
-                <div class="col-1 player-seat" id="seat8">Seat 8</div>
-                <div class="col-8 border-1px-solid table-playing-area">
-                    <div class="col-9 table-container" id="playingTable">
-                        <div class="col-9 cards-drop-area" ondrop="HandleDragDrop(event)" ondragover="allowDrop(event)">
-                            <div class="row col-12" id="cardsInPlayArea">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-1 player-seat" id="seat4">Seat 4</div>
-                <div class="col-2">
-                    <!-- Chat window-->
-                    <div class="chat-window border-1px-solid margin-top-5">
-
-                        <div class="chat-log">
-                            <ul id="chatView">
-                            </ul>
-                        </div>
-                        <div class="row p-1 chat-message">
-                            <div class="mb-3"><input type="text" id="message" placeholder="type a message.." class="form-control" /></div>
-                        </div>
-                        <div class="row p-1">
-                        </div>
-                    </div>
-                    <div id="deckArea" class="row">
-                        <div class="col-3" id="nuke-holder">
-                        </div>
-                        <div class="col-3 card-count" id="card-count-container">    
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-4 player-seat" id="seat7">Seat 7</div>
-                <div class="col-4 player-seat" id="seat6">Seat 6</div>
-                <div class="col-4 player-seat" id="seat5">Seat 5</div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="player-cards col-9" id="playerCards">
         </div>
     </div>
 </div>
 
+<div class="cards-area">
+    <div class="player-cards" id="playerCards"></div>
+    <div class="card-info" id="deckArea">
+        <div id="nuke-holder"></div>
+        <div class="card-count" id="card-count-container"></div>
+        <div id="timer"></div>
+    </div>
+</div>
+
+<div class="col-2" style="display: none;">
+    <!-- Chat window-->
+    <div class="chat-window" style="border: 1px solid black; margin-top:5px;">
+
+        <div class="chat-log">
+            <ul id="chatView">
+            </ul>
+        </div>
+        <div class="row p-1 chat-message">
+            <div class="mb-3"><input type="text" id="message" placeholder="type a message.." class="form-control" /></div>
+        </div>
+        <div class="row p-1">
+        </div>
+    </div>
+</div>
+
+
+
+<!--    Notification MessageBox     -->
 <div id="message-box">
     <p id="message-text"></p>
 </div>
