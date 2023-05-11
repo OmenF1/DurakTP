@@ -180,8 +180,11 @@ namespace Durak.Models
                     {
                         playerHands[playerId].Remove(playerHands[playerId].Where(c => c.friendlyName == friendlyPlayedName).FirstOrDefault());
                         gamePlayState.cardsInPlay.Add(friendlyPlayedName, null);
+
                         if (!allowPickUpPass)
                             StartTurnTimer(timerDuration);
+
+                        _logger.LogInformation($"{DateTime.Now} - game id: {id} - {playerId} attack with {friendlyPlayedName} was allowed");
                         return true;
                     }
                         
