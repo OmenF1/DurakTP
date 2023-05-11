@@ -103,7 +103,7 @@ namespace Durak.Models
             List<Player> tempL = new List<Player>(_players);
             string _startingAttacker = GetStartingAttacker(nuke.suite);
             string _startingDefender = GetStartingDefender(_startingAttacker, _players.Select(p => p.Name).ToList());
-
+            _logger.LogInformation($"{DateTime.Now} - game id: {id} - Started with nuke {nuke.friendlyName}");
 
 
             gamePlayState = new GamePlayState()
@@ -160,7 +160,7 @@ namespace Durak.Models
                 playerHands[playerId].Remove(playerHands[playerId].Where(c => c.friendlyName == friendlyPlayedName).FirstOrDefault());
                 gamePlayState.cardsInPlay.Add(friendlyPlayedName, null);
                 StartTurnTimer(timerDuration);
-                _logger.LogInformation($"{DateTime.Now} - game id: {id} - {playerId} opened the attack with {friendlyCoveredName}");
+                _logger.LogInformation($"{DateTime.Now} - game id: {id} - {playerId} opened the attack with {friendlyPlayedName}");
                 return true;
                 
             }
@@ -213,6 +213,7 @@ namespace Durak.Models
                 if (gamePlayState.attackerId == nextPlayerID)
                     gamePlayState.attackerId = playerId;
 
+                _logger.LogInformation($"{DateTime.Now} - game id: {id} - {playerId} passed on.");
                 StartTurnTimer(timerDuration);
                 return true;
             }
@@ -337,6 +338,7 @@ namespace Durak.Models
         {
             playTimer.Stop();
             SetNextPlayers(gamePlayState.attackerId, gamePlayState.defenderId, defended);
+            _logger.LogInformation($"{DateTime.Now} - game id: {id} - Next players set with defender {gamePlayState.defenderId} and attacker {gamePlayState.attackerId}");
             notifyNewTurn = true;
             //  Fuck this is bad, but I actually don't know how else to do it, I will research more into this later.
             if (callHub)
