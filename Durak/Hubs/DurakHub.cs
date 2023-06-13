@@ -180,6 +180,11 @@ namespace Durak.Hubs
             if (cardFriendlyName == null || groupId == null)
                 return;
 
+            //  TODO:
+            //  Move this into the javascript file.
+            if (cardDefendingName == cardFriendlyName)
+                return;
+
             if (!games.Exists(i => i.id == groupId))
                 return;
             var game = games.FirstOrDefault(i => i.id == groupId);

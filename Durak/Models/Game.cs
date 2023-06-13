@@ -170,6 +170,8 @@ namespace Durak.Models
                 return false;
 
             //  This method makes me want to hurl, but it's just temporary.
+            //  TODO:
+            //  Clean up this method.
             if (playerId != gamePlayState.defenderId)
             {
                 var cardVal = friendlyPlayedName.Split("_")[0];
